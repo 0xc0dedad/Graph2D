@@ -1,15 +1,22 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QWidget>
+#include "abstractwindow.h"
 
-class MainWindow : public QWidget
+class MainWindow : public AbstractWindow
 {
     Q_OBJECT
 
-public:
     MainWindow(QWidget *parent = 0);
+    MainWindow(const MainWindow &);
+    MainWindow &operator =(MainWindow &);
+
+public:
+    static MainWindow &instance(QWidget *parent = 0);
     ~MainWindow();
+
+private:
+        virtual void layout();
 };
 
 #endif // MAINWINDOW_H
