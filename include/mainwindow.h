@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include "abstractwindow.h"
+#include "graphicsview.h"
+
+class GraphicsView;
 
 class MainWindow : public AbstractWindow
 {
@@ -13,17 +16,20 @@ class MainWindow : public AbstractWindow
 
 public:
     static MainWindow &instance(QWidget *parent = 0);
+    QToolBar *getSettingsBar() const;
     ~MainWindow();
 
 private:
         virtual void layout();
         QToolBar *createSettingsBar(QWidget *parent, QToolBar **bar);
+        GraphicsView *createGraphicsView(QWidget *parent, GraphicsView **view);
 
 private slots:
         void showSettings();
 
 private:
         QToolBar *m_settings_bar;
+        GraphicsView *m_view;
 };
 
 #endif // MAINWINDOW_H

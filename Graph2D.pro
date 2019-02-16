@@ -28,9 +28,11 @@ CONFIG += c++11
 SOURCES += \
         src/main.cpp \
         src/mainwindow.cpp \
-    src/abstractwindow.cpp
+    src/abstractwindow.cpp \
+    src/graphicsview.cpp
 
 HEADERS += \
         include/mainwindow.h \
     include/abstractwindow.h \
-    include/log.h
+    include/log.h \
+    include/graphicsview.h

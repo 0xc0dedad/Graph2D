@@ -2,7 +2,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : AbstractWindow(parent),
-      m_settings_bar(nullptr)
+      m_settings_bar(nullptr),
+      m_view(nullptr)
 {
     layout();
 }
@@ -19,17 +20,30 @@ MainWindow &MainWindow::instance(QWidget *parent)
     return instance;
 }
 
+QToolBar *MainWindow::getSettingsBar() const
+{
+    return m_settings_bar;
+}
+
 void MainWindow::layout()
 {
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    QHBoxLayout *hl = new QHBoxLayout;
+    QVBoxLayout *layout = new QVBoxLayout;
+    QHBoxLayout *center_layout = new QHBoxLayout;
+    QVBoxLayout *bar_layout = new QVBoxLayout;
 
-    layout->setAlignment(Qt::AlignTop);
     layout->setContentsMargins(0, 0, 0, 0);
 
     if (createSettingsBar(this, &m_settings_bar))
-        hl->addWidget(m_settings_bar);
+    {
+        bar_layout->setAlignment(Qt::AlignTop | Qt::AlignCenter);
+        bar_layout->addWidget(m_settings_bar);
+        center_layout->addLayout(bar_layout);
+    }
 
+    if (createGraphicsView(this, &m_view))
+        center_layout->addWidget(m_view);
+
+    layout->addLayout(center_layout);
     this->setLayout(layout);
 }
 
@@ -46,7 +60,16 @@ QToolBar *MainWindow::createSettingsBar(QWidget *parent, QToolBar **bar)
             LOG_EXIT("Can't add bar action!", nullptr);
     }
 
+    (*bar)->setFixedSize(35, 35);
+
     return *bar;
+}
+
+GraphicsView *MainWindow::createGraphicsView(QWidget *parent, GraphicsView **view)
+{
+    (*view) = new GraphicsView(parent);
+
+    return *view;
 }
 
 void MainWindow::showSettings()
