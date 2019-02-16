@@ -17,6 +17,13 @@ public:
 
 private:
         virtual void layout();
+        QToolBar *createSettingsBar(QWidget *parent, QToolBar **bar);
+
+private slots:
+        void showSettings();
+
+private:
+        QToolBar *m_settings_bar;
 };
 
 #endif // MAINWINDOW_H

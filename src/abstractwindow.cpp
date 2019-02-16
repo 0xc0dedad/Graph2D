@@ -11,6 +11,11 @@ AbstractWindow::~AbstractWindow()
 
 }
 
+QString AbstractWindow::pathToImages() const
+{
+    return QApplication::applicationDirPath() + "/images/";
+}
+
 QToolBar *AbstractWindow::createToolBar(QWidget *parent, QToolBar **bar)
 {
     (*bar) = new QToolBar(parent);
@@ -39,4 +44,20 @@ QAction *AbstractWindow::addBarAction(QToolBar **bar, QIcon icon,
     (*bar)->addAction(action);
 
     return action;
+}
+
+QGroupBox *AbstractWindow::createGroupBox(QWidget *parent, QGroupBox **group)
+{
+    (*group) = new QGroupBox(parent);
+
+    return *group;
+}
+
+QLabel *AbstractWindow::createLabel(QString title, QFont font, QLabel **lbl)
+{
+    (*lbl) = new QLabel;
+    (*lbl)->setText(title);
+    (*lbl)->setFont(font);
+
+    return *lbl;
 }

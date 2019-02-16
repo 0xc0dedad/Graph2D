@@ -32,4 +32,5 @@ SOURCES += \
 
 HEADERS += \
         include/mainwindow.h \
-    include/abstractwindow.h
+    include/abstractwindow.h \
+    include/log.h

@@ -6,6 +6,11 @@
 #include <QAction>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QGroupBox>
+#include <QLabel>
+#include <QApplication>
+
+#include "log.h"
 
 class AbstractWindow : public QWidget
 {
@@ -18,8 +23,11 @@ class AbstractWindow : public QWidget
             QAction *addBarAction(QToolBar **bar, QIcon icon, QString tooltip,
                               QSize size, QWidget *handler, const char *slot,
                               bool is_checkable);
+            QGroupBox *createGroupBox(QWidget *parent, QGroupBox **group);
+            QLabel *createLabel(QString title, QFont font, QLabel **lbl);
     public:
             ~AbstractWindow();
+            QString pathToImages() const;
 };
 
 #endif // ABSTRACTWINDOW_H
