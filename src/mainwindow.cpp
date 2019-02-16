@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
       m_view(nullptr)
 {
     layout();
+    setBackgroundColor();
 }
 
 MainWindow::~MainWindow()
@@ -27,7 +28,7 @@ QToolBar *MainWindow::getSettingsBar() const
 
 void MainWindow::layout()
 {
-    QVBoxLayout *layout = new QVBoxLayout;
+    QVBoxLayout *layout = new QVBoxLayout(this);
     QHBoxLayout *center_layout = new QHBoxLayout;
     QVBoxLayout *bar_layout = new QVBoxLayout;
 
@@ -68,8 +69,14 @@ QToolBar *MainWindow::createSettingsBar(QWidget *parent, QToolBar **bar)
 GraphicsView *MainWindow::createGraphicsView(QWidget *parent, GraphicsView **view)
 {
     (*view) = new GraphicsView(parent);
+    (*view)->setBackgroundBrush(QBrush(QColor(34, 34, 34), Qt::Dense1Pattern));
 
     return *view;
+}
+
+void MainWindow::setBackgroundColor()
+{
+    this->setStyleSheet("background: rgb(75, 75, 75);");
 }
 
 void MainWindow::showSettings()

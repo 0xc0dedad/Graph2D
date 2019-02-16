@@ -23,6 +23,7 @@ private:
         virtual void layout();
         QToolBar *createSettingsBar(QWidget *parent, QToolBar **bar);
         GraphicsView *createGraphicsView(QWidget *parent, GraphicsView **view);
+        void setBackgroundColor();
 
 private slots:
         void showSettings();
