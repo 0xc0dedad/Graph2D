@@ -6,21 +6,21 @@ Node::Node(const QRectF &rect, QGraphicsItem *parent)
     : QGraphicsEllipseItem(rect, parent),
       m_text(QString::number(++m_counter))
 {
-
+    setCursor(Qt::PointingHandCursor);
 }
 
 Node::Node(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent)
     : QGraphicsEllipseItem(x, y, w, h, parent),
       m_text(QString::number(++m_counter))
 {
-
+    setCursor(Qt::PointingHandCursor);
 }
 
 Node::Node(QGraphicsItem *parent)
     : QGraphicsEllipseItem(parent),
       m_text(QString::number(++m_counter))
 {
-
+    setCursor(Qt::PointingHandCursor);
 }
 
 Node::~Node()
