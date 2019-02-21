@@ -17,6 +17,7 @@ class MainWindow : public AbstractWindow
 public:
     static MainWindow &instance(QWidget *parent = 0);
     QToolBar *getSettingsBar() const;
+    GraphicsView *getView() const;
     ~MainWindow();
 
 private:

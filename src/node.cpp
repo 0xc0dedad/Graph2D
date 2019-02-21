@@ -42,11 +42,15 @@ void Node::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     QMenu menu;
     QStringList lst;
+    GraphicsView *handler = MainWindow::instance().getView();
+
+    if (!handler)
+        LOG_EXIT("Invalid handler", );
 
     lst << "Rename" << "Connect..." << "Move..." << "Delete";
 
     for(int i=0; i<lst.size(); i++)
-        menu.addAction(lst[i]);
+        menu.addAction(lst[i], handler, SLOT(modeHandler()));
 
     menu.exec(event->screenPos());
 }

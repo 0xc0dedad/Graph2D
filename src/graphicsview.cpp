@@ -1,8 +1,17 @@
 #include "graphicsview.h"
 
+str2mode_t str2mode_arr[] = {
+  { .str = "Rename", .mode = Renaming },
+  { .str = "Connect...", .mode = Connecting },
+  { .str = "Move...", .mode = Moving },
+  { .str = "Delete", .mode = Deleting },
+  { NULL, None }
+};
+
 GraphicsView::GraphicsView(QWidget *parent)
     : QGraphicsView(parent),
-      m_scene(nullptr)
+      m_scene(nullptr),
+      m_mode(Default)
 {
     QSize size = sizeHint();
 
@@ -53,6 +62,15 @@ size_t GraphicsView::horizontalOffset() const
     return offset + additional;
 }
 
+void GraphicsView::modeHandler()
+{
+    QAction *action = qobject_cast<QAction*> (sender());
+
+    if (!action)
+        LOG_EXIT("Invalid action", );
+
+    m_mode = str2mode(action->text());
+}
 
 void GraphicsView::addItem(QGraphicsItem *item)
 {
@@ -84,5 +102,32 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
     size_t radius = 20;
 
     if (event->button() == Qt::LeftButton)
-        addNode(radius, QBrush(Qt::white, Qt::SolidPattern), event->pos());
+    {
+        switch (m_mode)
+        {
+            case Default:
+            addNode(radius, QBrush(Qt::white, Qt::SolidPattern), event->pos());
+            break;
+
+            default:
+            LOG_DEBUG("Invalid mode!");
+            break;
+        }
+    }
+}
+
+Mode str2mode(const QString str)
+{
+    str2mode_t *current = str2mode_arr;
+
+    if (str.isEmpty())
+        return None;
+
+    for(; current->str != NULL; current++)
+    {
+        if (current->str == str)
+            return current->mode;
+    }
+
+    return Mode::None;
 }

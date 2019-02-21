@@ -7,6 +7,7 @@
 #include <QGraphicsSceneContextMenuEvent>
 
 #include "log.h"
+#include "mainwindow.h"
 
 class Node : public QGraphicsEllipseItem
 {

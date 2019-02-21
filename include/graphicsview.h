@@ -15,6 +15,22 @@
 
 class MainWindow;
 
+enum Mode
+{
+    Default,
+    Renaming,
+    Connecting,
+    Moving,
+    Deleting,
+    None = -1
+};
+
+typedef struct
+{
+    QString str;
+    Mode mode;
+} str2mode_t;
+
 class GraphicsView : public QGraphicsView
 {
     Q_OBJECT
@@ -39,8 +55,15 @@ private:
     QGraphicsScene *createScene(QWidget *parent, QGraphicsScene **scene);
     size_t horizontalOffset() const;
 
+public slots:
+    void modeHandler();
+
 private:
         QGraphicsScene *m_scene;
+        Mode m_mode;
 };
+
+extern str2mode_t str2mode_arr[];
+Mode str2mode(const QString str);
 
 #endif // GRAPHICSVIEW_H

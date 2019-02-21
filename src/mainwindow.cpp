@@ -26,6 +26,11 @@ QToolBar *MainWindow::getSettingsBar() const
     return m_settings_bar;
 }
 
+GraphicsView *MainWindow::getView() const
+{
+    return m_view;
+}
+
 void MainWindow::layout()
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
