@@ -69,7 +69,20 @@ QGraphicsScene *GraphicsView::getScene() const
     return m_scene;
 }
 
+void GraphicsView::addNode(const size_t radius, const QBrush brush,
+  const QPointF pos)
+{
+    Node *item = new Node;
+
+    item->setRect(pos.x() - radius / 2, pos.y() - radius / 2, radius, radius);
+    item->setBrush(brush);
+    m_scene->addItem(item);
+}
+
 void GraphicsView::mousePressEvent(QMouseEvent *event)
 {
+    size_t radius = 20;
 
+    if (event->button() == Qt::LeftButton)
+        addNode(radius, QBrush(Qt::white, Qt::SolidPattern), event->pos());
 }

@@ -11,6 +11,7 @@
 
 #include "log.h"
 #include "mainwindow.h"
+#include "node.h"
 
 class MainWindow;
 
@@ -29,6 +30,7 @@ public:
     void addItem(QGraphicsItem *item);
     void setBrush(QBrush brush);
     QGraphicsScene *getScene() const;
+    void addNode(const size_t radius, const QBrush brush, const QPointF pos);
 
 protected:
     void mousePressEvent(QMouseEvent *event);

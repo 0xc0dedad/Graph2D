@@ -29,10 +29,12 @@ SOURCES += \
         src/main.cpp \
         src/mainwindow.cpp \
     src/abstractwindow.cpp \
-    src/graphicsview.cpp
+    src/graphicsview.cpp \
+    src/node.cpp
 
 HEADERS += \
         include/mainwindow.h \
     include/abstractwindow.h \
     include/log.h \
-    include/graphicsview.h
+    include/graphicsview.h \
+    include/node.h
