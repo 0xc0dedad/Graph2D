@@ -14,6 +14,7 @@
 #include "node.h"
 
 class MainWindow;
+class Node;
 
 enum Mode
 {
@@ -56,7 +57,7 @@ private:
     size_t horizontalOffset() const;
 
 public slots:
-    void modeHandler();
+    void modeHandler(QAction*, Node*);
 
 private:
         QGraphicsScene *m_scene;

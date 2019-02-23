@@ -62,12 +62,10 @@ size_t GraphicsView::horizontalOffset() const
     return offset + additional;
 }
 
-void GraphicsView::modeHandler()
+void GraphicsView::modeHandler(QAction *action, Node *sndr)
 {
-    QAction *action = qobject_cast<QAction*> (sender());
-
-    if (!action)
-        LOG_EXIT("Invalid action", );
+    if (!action || !sndr)
+        LOG_EXIT("Invalid parameter", );
 
     m_mode = str2mode(action->text());
 }

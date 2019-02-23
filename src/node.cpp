@@ -6,26 +6,39 @@ Node::Node(const QRectF &rect, QGraphicsItem *parent)
     : QGraphicsEllipseItem(rect, parent),
       m_text(QString::number(++m_counter))
 {
-    setCursor(Qt::PointingHandCursor);
+    init();
 }
 
 Node::Node(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent)
     : QGraphicsEllipseItem(x, y, w, h, parent),
       m_text(QString::number(++m_counter))
 {
-    setCursor(Qt::PointingHandCursor);
+    init();
 }
 
 Node::Node(QGraphicsItem *parent)
     : QGraphicsEllipseItem(parent),
       m_text(QString::number(++m_counter))
 {
-    setCursor(Qt::PointingHandCursor);
+    init();
 }
 
 Node::~Node()
 {
 
+}
+
+void Node::init()
+{
+    GraphicsView *handler = MainWindow::instance().getView();
+
+    setCursor(Qt::PointingHandCursor);
+
+    if (!handler)
+        LOG_EXIT("Invalid handler", );
+
+    connect(this, SIGNAL(menuItemSelected(QAction*, Node*)), handler,
+     SLOT(modeHandler(QAction*, Node*)));
 }
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
@@ -42,15 +55,11 @@ void Node::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     QMenu menu;
     QStringList lst;
-    GraphicsView *handler = MainWindow::instance().getView();
-
-    if (!handler)
-        LOG_EXIT("Invalid handler", );
 
     lst << "Rename" << "Connect..." << "Move..." << "Delete";
 
     for(int i=0; i<lst.size(); i++)
-        menu.addAction(lst[i], handler, SLOT(modeHandler()));
+        menu.addAction(lst[i], this, SLOT(signalSender()));
 
     menu.exec(event->screenPos());
 }
@@ -63,4 +72,14 @@ void Node::setText(const QString string)
         LOG_EXIT("Invalid title", );
 
    m_text = string;
+}
+
+void Node::signalSender()
+{
+    QAction *action = qobject_cast<QAction*> (sender());
+
+    if (!action)
+        LOG_EXIT("Invalid action", );
+
+    emit menuItemSelected(action, this);
 }

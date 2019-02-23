@@ -9,8 +9,10 @@
 #include "log.h"
 #include "mainwindow.h"
 
-class Node : public QGraphicsEllipseItem
+class Node : public QObject, public QGraphicsEllipseItem
 {
+    Q_OBJECT
+
 public:
     explicit Node(const QRectF &rect, QGraphicsItem *parent = Q_NULLPTR);
     explicit Node(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = Q_NULLPTR);
@@ -20,6 +22,15 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     void setText(const QString string);
+
+private:
+    void init();
+
+private slots:
+    void signalSender(); /* XXX: Wrapper for adding additional info */
+
+signals:
+    void menuItemSelected(QAction*, Node*);
 
 private:
     QString m_text;
