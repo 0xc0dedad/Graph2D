@@ -11,7 +11,8 @@ str2mode_t str2mode_arr[] = {
 GraphicsView::GraphicsView(QWidget *parent)
     : QGraphicsView(parent),
       m_scene(nullptr),
-      m_mode(Default)
+      m_mode(Default),
+      m_selected_node(nullptr)
 {
     QSize size = sizeHint();
 
@@ -68,6 +69,15 @@ void GraphicsView::modeHandler(QAction *action, Node *sndr)
         LOG_EXIT("Invalid parameter", );
 
     m_mode = str2mode(action->text());
+    m_selected_node = sndr;
+
+    if (m_mode != Connecting)
+        emit setConnectionMode(false);
+}
+
+void GraphicsView::setMode(int mode)
+{
+    m_mode = (Mode) mode;
 }
 
 void GraphicsView::addItem(QGraphicsItem *item)
@@ -93,6 +103,31 @@ void GraphicsView::addNode(const size_t radius, const QBrush brush,
     item->setRect(pos.x() - radius / 2, pos.y() - radius / 2, radius, radius);
     item->setBrush(brush);
     m_scene->addItem(item);
+    m_nodes.push_back(item);
+}
+
+void GraphicsView::addEdge(qreal x1, qreal y1, qreal x2, qreal y2)
+{
+    Edge *item = new Edge;
+
+    item->setLine(x1, y1, x2, y2);
+    item->setPen(QPen(Qt::white, 1, Qt::SolidLine));
+    m_scene->addItem(item);
+
+    if (!m_selected_node)
+        LOG_EXIT("Can't add edge!", );
+
+    m_selected_node->addEdge(&item);
+}
+
+Mode GraphicsView::getMode() const
+{
+    return m_mode;
+}
+
+Node *GraphicsView::getSelectedNode() const
+{
+    return m_selected_node;
 }
 
 void GraphicsView::mousePressEvent(QMouseEvent *event)
@@ -108,10 +143,64 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
             break;
 
             default:
-            LOG_DEBUG("Invalid mode!");
+            LOG_DEBUG("Invalid mode!" << m_mode);
             break;
         }
+
+        QGraphicsView::mousePressEvent(event);
     }
+}
+
+void GraphicsView::mouseMoveEvent(QMouseEvent *event)
+{
+    if (m_mode == Connecting)
+    {
+        QPointF center, pos;
+
+        if (!m_selected_node)
+            LOG_EXIT("Invalid parameter", );
+
+        center = m_selected_node->rect().center();
+        pos = event->pos();
+
+        if (m_selected_node->isConnectionMode())
+        {
+            Edge *selected = m_selected_node->getSelectedEdge();
+
+            if (!selected)
+                LOG_EXIT("Invalid pointer",  );
+
+            selected->setLine(center.x(), center.y(), pos.x(), pos.y());
+        }
+        else
+        {
+            addEdge(center.x(), center.y(), pos.x(), pos.y());
+            emit setConnectionMode(true);
+        }
+    }
+}
+
+void GraphicsView::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape)
+    {
+        QVector<Edge*> *edges = m_selected_node->getEdges();
+
+        for(int j=0; j<edges->size(); j++)
+        {
+            if ((*edges)[j]->isEdgeSelected())
+            {
+                m_scene->removeItem((*edges)[j]);
+                edges->remove(j);
+                setMode(Mode::Default);
+                m_selected_node->setConnectionMode(false);
+
+                return;
+            }
+        }
+    }
+
+    QGraphicsView::keyPressEvent(event);
 }
 
 Mode str2mode(const QString str)
