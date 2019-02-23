@@ -30,9 +30,14 @@ public:
     void setText(const QString string);
     bool isConnectionMode() const;
     void addEdge(Edge **edge);
+    void addNeighbor(Node *node);
+    bool isAmongNeighbors(Node *node) const;
     Edge *getSelectedEdge() const;
     QString text() const;
+
+    /* Can modify data. Not trivial logic */
     QVector<Edge*> *getEdges();
+    QVector<Node*> *getNeighbors();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -56,6 +61,7 @@ private:
     static unsigned m_counter;
     bool m_edge_mode;
     QVector<Edge*> m_edges;
+    QVector<Node*> m_neighbors;
 };
 
 #endif // NODE_H

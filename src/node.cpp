@@ -6,7 +6,8 @@ Node::Node(const QRectF &rect, QGraphicsItem *parent)
     : QGraphicsEllipseItem(rect, parent),
       m_text(QString::number(++m_counter)),
       m_edge_mode(false),
-      m_edges(0)
+      m_edges(0),
+      m_neighbors(0)
 {
     init();
 }
@@ -15,7 +16,8 @@ Node::Node(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent)
     : QGraphicsEllipseItem(x, y, w, h, parent),
       m_text(QString::number(++m_counter)),
       m_edge_mode(false),
-      m_edges(0)
+      m_edges(0),
+      m_neighbors(0)
 {
     init();
 }
@@ -24,7 +26,8 @@ Node::Node(QGraphicsItem *parent)
     : QGraphicsEllipseItem(parent),
       m_text(QString::number(++m_counter)),
       m_edge_mode(false),
-      m_edges(0)
+      m_edges(0),
+      m_neighbors(0)
 {
     init();
 }
@@ -98,6 +101,25 @@ void Node::addEdge(Edge **edge)
     m_edges.push_back(*edge);
 }
 
+void Node::addNeighbor(Node *node)
+{
+    if (!node)
+        LOG_EXIT("Invalid parameter", );
+
+    m_neighbors.push_back(node);
+}
+
+bool Node::isAmongNeighbors(Node *node) const
+{
+    for(int i=0; i<m_neighbors.size(); i++)
+    {
+        if (node == m_neighbors[i])
+            return true;
+    }
+
+    return false;
+}
+
 Edge *Node::getSelectedEdge() const
 {
     return m_edges.isEmpty() ? nullptr : m_edges.back();
@@ -113,21 +135,32 @@ QVector<Edge *> *Node::getEdges()
     return &m_edges;
 }
 
+QVector<Node *> *Node::getNeighbors()
+{
+    return &m_neighbors;
+}
+
 void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    Node *node;
     GraphicsView *view = MainWindow::instance().getView();
 
     if (!view)
         LOG_EXIT("Invalid pointer", );
 
-    if (view->getMode() == Mode::Connecting)
+    node = view->getSelectedNode();
+
+    /* XXX: Handler for non selected node */
+    if ((view->getMode() == Mode::Connecting) && (this != node))
     {
         Edge *edge;
         QPointF n1, n2;
-        Node *node = view->getSelectedNode();
 
         if (!node)
             LOG_EXIT("Invalid pointer", );
+
+        if (isAmongNeighbors(node))
+            LOG_EXIT("Is a neighbor!", );
 
         n1 = node->rect().center();
         n2 = this->rect().center();
@@ -141,6 +174,10 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
         addEdge(&edge);
         emit setMode(Mode::Default);
         node->setEdgeSelection(false);
+
+        /* Add neighbors */
+        this->addNeighbor(node);
+        node->addNeighbor(this);
 
         /* XXX: warkround. Fix Edge disappearing */
         view->disableNodesConnectionModes();
