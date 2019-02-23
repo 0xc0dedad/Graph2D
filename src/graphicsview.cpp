@@ -130,11 +130,14 @@ void GraphicsView::addEdge(qreal x1, qreal y1, qreal x2, qreal y2)
 
     item->setLine(x1, y1, x2, y2);
     item->setPen(QPen(Qt::white, 1, Qt::SolidLine));
-    m_scene->addItem(item);
 
     if (!m_selected_node)
+    {
+        delete item;
         LOG_EXIT("Can't add edge!", );
+    }
 
+    m_scene->addItem(item);
     m_selected_node->addEdge(&item);
 }
 
