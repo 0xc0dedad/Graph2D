@@ -68,7 +68,7 @@ protected:
 private:
     QGraphicsScene *createScene(QWidget *parent, QGraphicsScene **scene);
     size_t horizontalOffset() const;
-    bool isNodeIntersected(Node *node) const;
+    bool isNodeIntersected(QRectF rect) const;
 
 public slots:
     void modeHandler(QAction*, Node*);
