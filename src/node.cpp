@@ -141,10 +141,9 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
         addEdge(&edge);
         emit setMode(Mode::Default);
         node->setEdgeSelection(false);
-        node->setConnectionMode(false);
 
         /* XXX: warkround. Fix Edge disappearing */
-        setConnectionMode(false);
+        view->disableNodesConnectionModes();
     }
 }
 

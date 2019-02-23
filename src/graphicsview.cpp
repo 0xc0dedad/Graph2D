@@ -152,6 +152,12 @@ Node *GraphicsView::getSelectedNode() const
     return m_selected_node;
 }
 
+void GraphicsView::disableNodesConnectionModes()
+{
+    for(int i=0; i<m_nodes.size(); i++)
+        m_nodes[i]->setConnectionMode(false);
+}
+
 void GraphicsView::mousePressEvent(QMouseEvent *event)
 {
     size_t radius = 20;
@@ -215,7 +221,7 @@ void GraphicsView::keyPressEvent(QKeyEvent *event)
                 m_scene->removeItem((*edges)[j]);
                 edges->remove(j);
                 setMode(Mode::Default);
-                m_selected_node->setConnectionMode(false);
+                disableNodesConnectionModes();
 
                 return;
             }

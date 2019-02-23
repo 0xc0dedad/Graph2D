@@ -59,6 +59,7 @@ public:
     void addEdge(qreal x1, qreal y1, qreal x2, qreal y2);
     Mode getMode() const;
     Node *getSelectedNode() const;
+    void disableNodesConnectionModes();
 
 protected:
     void mousePressEvent(QMouseEvent *event);
