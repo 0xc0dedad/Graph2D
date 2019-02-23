@@ -63,6 +63,17 @@ size_t GraphicsView::horizontalOffset() const
     return offset + additional;
 }
 
+bool GraphicsView::isNodeIntersected(Node *node) const
+{
+    for(int i=0; i<m_nodes.size(); i++)
+    {
+        if (node->rect().intersects(m_nodes[i]->rect()))
+            return true;
+    }
+
+    return false;
+}
+
 void GraphicsView::modeHandler(QAction *action, Node *sndr)
 {
     if (!action || !sndr)
@@ -101,6 +112,13 @@ void GraphicsView::addNode(const size_t radius, const QBrush brush,
     Node *item = new Node;
 
     item->setRect(pos.x() - radius / 2, pos.y() - radius / 2, radius, radius);
+
+    if (isNodeIntersected(item))
+    {
+        delete item;
+        LOG_EXIT("Node intersected!", )
+    }
+
     item->setBrush(brush);
     m_scene->addItem(item);
     m_nodes.push_back(item);
