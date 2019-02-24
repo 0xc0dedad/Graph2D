@@ -60,6 +60,9 @@ public:
     Mode getMode() const;
     Node *getSelectedNode() const;
     void disableNodesConnectionModes();
+    void deleteNode(Node *node);
+    /* XXX: Remove from m_nodes vector */
+    void removeNode(Node *node);
 
 protected:
     void mousePressEvent(QMouseEvent *event);

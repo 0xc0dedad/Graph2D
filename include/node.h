@@ -29,11 +29,18 @@ public:
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     void setText(const QString string);
     bool isConnectionMode() const;
-    void addEdge(Edge **edge);
     void addNeighbor(Node *node);
     bool isAmongNeighbors(Node *node) const;
     Edge *getSelectedEdge() const;
     QString text() const;
+
+    void addEdge(Node *first, Node *second, Edge **edge);
+    void modifyEdgeVertices(Edge *edge, Node *first, Node *second);
+    Edge *findConnectedEdge(Node *node) const;
+
+    /*XXX: find edge/neighbor in corresponded vector */
+    int findEdge(Edge *edge) const;
+    int findNeighbor(Node *node) const;
 
     /* Can modify data. Not trivial logic */
     QVector<Edge*> *getEdges();

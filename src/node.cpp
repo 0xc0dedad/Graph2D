@@ -91,14 +91,64 @@ bool Node::isConnectionMode() const
     return m_edge_mode;
 }
 
-void Node::addEdge(Edge **edge)
+void Node::addEdge(Node *first, Node *second, Edge **edge)
 {
     if (!edge || !*edge)
         LOG_EXIT("Invalid parameter", );
 
-    connect(this, SIGNAL(setEdgeSelection(bool)), *edge, SLOT(setSelection(bool)));
+    connect(this, SIGNAL(setEdgeSelection(bool)), *edge,
+     SLOT(setSelection(bool)));
 
+    (*edge)->setVertices(first, second);
     m_edges.push_back(*edge);
+}
+
+void Node::modifyEdgeVertices(Edge *edge, Node *first, Node *second)
+{
+    if (!edge)
+        LOG_EXIT("Invalid pointer", );
+
+    if (!first)
+        edge->setSecondVertex(second);
+
+    if (!second)
+        edge->setFirstVertex(first);
+}
+
+Edge *Node::findConnectedEdge(Node *node) const
+{
+    if (!node)
+        LOG_EXIT("Invalid pointer", nullptr);
+
+    for(int i=0; i<m_edges.size(); i++)
+    {
+        if (m_edges[i]->isExist(node))
+            return m_edges[i];
+    }
+
+    return nullptr;
+}
+
+int Node::findEdge(Edge *edge) const
+{
+    for(int i=0; i<m_edges.size(); i++)
+    {
+        if (m_edges[i] == edge)
+            return i;
+    }
+
+    return -1;
+}
+
+int Node::findNeighbor(Node *node) const
+{
+    for(int i=0; i<m_neighbors.size(); i++)
+    {
+        if (m_neighbors[i] == node)
+            return i;
+    }
+
+    return -1;
 }
 
 void Node::addNeighbor(Node *node)
@@ -171,7 +221,10 @@ void Node::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
         edge->setLine(n1.x(), n1.y(), n2.x(), n2.y());
 
-        addEdge(&edge);
+        /* Add edges and vertices to it */
+        this->addEdge(node, this,  &edge);
+        node->modifyEdgeVertices(edge, nullptr, this);
+
         emit setMode(Mode::Default);
         node->setEdgeSelection(false);
 

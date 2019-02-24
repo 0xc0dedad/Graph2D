@@ -82,6 +82,16 @@ void GraphicsView::modeHandler(QAction *action, Node *sndr)
     m_mode = str2mode(action->text());
     m_selected_node = sndr;
 
+    switch (m_mode)
+    {
+        case Deleting:
+        deleteNode(sndr);
+        break;
+
+        default:
+        break;
+    }
+
     if (m_mode != Connecting)
         emit setConnectionMode(false);
 }
@@ -139,7 +149,7 @@ void GraphicsView::addEdge(qreal x1, qreal y1, qreal x2, qreal y2)
     }
 
     m_scene->addItem(item);
-    m_selected_node->addEdge(&item);
+    m_selected_node->addEdge(m_selected_node, nullptr, &item);
 }
 
 Mode GraphicsView::getMode() const
@@ -156,6 +166,58 @@ void GraphicsView::disableNodesConnectionModes()
 {
     for(int i=0; i<m_nodes.size(); i++)
         m_nodes[i]->setConnectionMode(false);
+}
+
+void GraphicsView::deleteNode(Node *node)
+{
+    Edge *edge;
+    QVector<Node*> *neighbors;
+
+    if (!node)
+        LOG_EXIT("Invalid pointer", );
+
+    neighbors = node->getNeighbors();
+
+    for(int i=0; i<neighbors->size(); i++)
+    {
+        if ((edge = (*neighbors)[i]->findConnectedEdge(node)))
+        {
+            int index;
+
+            index = (*neighbors)[i]->findEdge(edge);
+
+            if (index != -1)
+                (*neighbors)[i]->getEdges()->remove(index);
+            else
+                LOG_DEBUG("Can't find edge!");
+
+            index = (*neighbors)[i]->findNeighbor(node);
+
+            if (index != -1)
+                (*neighbors)[i]->getNeighbors()->remove(index);
+            else
+                LOG_DEBUG("Can't find neighbor!");
+
+            m_scene->removeItem(edge);
+            delete edge;
+        }
+    }
+
+    m_scene->removeItem(node);
+    removeNode(node);
+    delete node;
+
+    setMode(Default);
+}
+
+void GraphicsView::removeNode(Node *node)
+{
+    if (!node)
+        LOG_EXIT("Invalid pointer", );
+
+    for(int i=0; i<m_nodes.size(); i++)
+        if (m_nodes[i] == node)
+            m_nodes.remove(i);
 }
 
 void GraphicsView::mousePressEvent(QMouseEvent *event)
