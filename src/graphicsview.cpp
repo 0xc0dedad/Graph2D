@@ -31,7 +31,7 @@ GraphicsView::GraphicsView(QWidget *parent)
 
 GraphicsView::~GraphicsView()
 {
-
+    m_scene->deleteLater();
 }
 
 QSize GraphicsView::sizeHint() const
