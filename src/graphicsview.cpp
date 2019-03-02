@@ -128,6 +128,8 @@ void GraphicsView::modeHandler(QAction *action, AbstractItem *sndr)
 void GraphicsView::setMode(int mode)
 {
     m_mode = (Mode) mode;
+    m_selected_node = nullptr;
+    m_selected_edge = nullptr;
 }
 
 void GraphicsView::addItem(QGraphicsItem *item)
