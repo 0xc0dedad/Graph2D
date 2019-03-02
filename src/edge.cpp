@@ -62,6 +62,16 @@ bool Edge::isExist(Node *node) const
     return false;
 }
 
+QPointF Edge::getFirstVertexPos() const
+{
+    return m_vertices.first->rect().center();
+}
+
+QPointF Edge::getSecondVertexPos() const
+{
+    return m_vertices.second->rect().center();
+}
+
 void Edge::setSelection(bool value)
 {
     m_is_selected = value;

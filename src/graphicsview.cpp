@@ -12,7 +12,8 @@ GraphicsView::GraphicsView(QWidget *parent)
     : QGraphicsView(parent),
       m_scene(nullptr),
       m_mode(Default),
-      m_selected_node(nullptr)
+      m_selected_node(nullptr),
+      m_moving_captured(false)
 {
     QSize size = sizeHint();
 
@@ -232,6 +233,10 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
             addNode(radius, QBrush(Qt::white, Qt::SolidPattern), event->pos());
             break;
 
+            case Moving:
+            m_moving_captured = true;
+            break;
+
             default:
             LOG_DEBUG("Invalid mode!" << m_mode);
             break;
@@ -243,15 +248,16 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
 
 void GraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
+    QPointF pos = event->pos();
+
     if (m_mode == Connecting)
     {
-        QPointF center, pos;
+        QPointF center;
 
         if (!m_selected_node)
             LOG_EXIT("Invalid parameter", );
 
         center = m_selected_node->rect().center();
-        pos = event->pos();
 
         if (m_selected_node->isConnectionMode())
         {
@@ -268,6 +274,49 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event)
             emit setConnectionMode(true);
         }
     }
+
+    if ((m_mode == Moving) && m_moving_captured)
+    {
+        QVector<Edge*> *edges;
+        const size_t radius = 20;
+
+        if (!m_selected_node)
+            LOG_EXIT("Invalid parameter", );
+
+        edges = m_selected_node->getEdges();
+        m_selected_node->setRect(pos.x() - radius / 2,
+          pos.y() - radius / 2, radius, radius);
+
+        for(int i=0; i<(*edges).size(); i++)
+        {
+            QPointF vpos;
+            QPair<Node*, Node*> vertices = (*edges)[i]->getVertices();
+
+            if (vertices.first == m_selected_node)
+            {
+                vpos = (*edges)[i]->getSecondVertexPos();
+                (*edges)[i]->setLine(pos.x(), pos.y(), vpos.x(), vpos.y());
+                continue;
+            }
+            else
+            {
+                vpos = (*edges)[i]->getFirstVertexPos();
+                (*edges)[i]->setLine(vpos.x(), vpos.y(), pos.x(), pos.y());
+            }
+        }
+    }
+}
+
+void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton && (m_mode == Moving) &&
+         m_moving_captured)
+    {
+        m_moving_captured = false;
+        setMode(Default);
+    }
+
+    QGraphicsView::mouseReleaseEvent(event);
 }
 
 void GraphicsView::keyPressEvent(QKeyEvent *event)

@@ -26,6 +26,8 @@ public:
     void setFirstVertex(Node *node);
     void setSecondVertex(Node *node);
     bool isExist(Node *node) const;
+    QPointF getFirstVertexPos() const;
+    QPointF getSecondVertexPos() const;
 
 private slots:
     void setSelection(bool);

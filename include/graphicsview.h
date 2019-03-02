@@ -67,6 +67,7 @@ public:
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
 
 private:
@@ -86,6 +87,7 @@ private:
         Mode m_mode;
         Node *m_selected_node;
         QVector<Node*> m_nodes;
+        bool m_moving_captured;
 };
 
 extern str2mode_t str2mode_arr[];
