@@ -383,7 +383,7 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
 
 void GraphicsView::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape)
+    if ((event->key() == Qt::Key_Escape) && m_mode == Connecting)
     {
         QVector<Edge*> *edges = m_selected_node->getEdges();
 
