@@ -63,6 +63,7 @@ public:
     Node *getSelectedNode() const;
     void disableNodesConnectionModes();
     void deleteNode(Node *node);
+    void deleteEdge(Edge *edge);
     /* XXX: Remove from m_nodes vector */
     void removeNode(Node *node);
 

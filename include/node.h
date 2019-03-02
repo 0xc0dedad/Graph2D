@@ -32,6 +32,7 @@ public:
     void setText(const QString string);
     bool isConnectionMode() const;
     void addNeighbor(Node *node);
+    void delNeighbor(Node *node);
     bool isAmongNeighbors(Node *node) const;
     Edge *getSelectedEdge() const;
     QString text() const;

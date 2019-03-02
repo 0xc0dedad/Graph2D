@@ -165,6 +165,21 @@ void Node::addNeighbor(Node *node)
     m_neighbors.push_back(node);
 }
 
+void Node::delNeighbor(Node *node)
+{
+    int index;
+
+    if (!node)
+        LOG_EXIT("Invalid pointer", );
+
+    index = findNeighbor(node);
+
+    if (index != -1)
+        m_neighbors.remove(index);
+    else
+        LOG_DEBUG("Can't find neighbor!");
+}
+
 bool Node::isAmongNeighbors(Node *node) const
 {
     for(int i=0; i<m_neighbors.size(); i++)

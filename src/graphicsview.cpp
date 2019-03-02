@@ -106,7 +106,7 @@ void GraphicsView::modeHandler(QAction *action, AbstractItem *sndr)
         break;
 
         case DeletingEdge:
-        /* Delete edge */
+        deleteEdge(m_selected_edge);
         break;
 
         case Default:
@@ -235,6 +235,38 @@ void GraphicsView::deleteNode(Node *node)
     m_scene->removeItem(node);
     removeNode(node);
     delete node;
+
+    setMode(Default);
+}
+
+void GraphicsView::deleteEdge(Edge *edge)
+{
+    int index;
+    QPair<Node*, Node*> vertices;
+
+    if (!edge)
+        LOG_EXIT("Invalid pointer", );
+
+    vertices = edge->getVertices();
+
+    index = vertices.first->findEdge(edge);
+    vertices.first->delNeighbor(vertices.second);
+
+    if (index != -1)
+        vertices.first->getEdges()->remove(index);
+    else
+        LOG_DEBUG("Can't find edge!");
+
+    index = vertices.second->findEdge(edge);
+    vertices.second->delNeighbor(vertices.first);
+
+    if (index != -1)
+        vertices.second->getEdges()->remove(index);
+    else
+        LOG_DEBUG("Can't find edge!");
+
+    m_scene->removeItem(edge);
+    delete edge;
 
     setMode(Default);
 }
