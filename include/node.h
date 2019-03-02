@@ -9,13 +9,14 @@
 #include "log.h"
 #include "mainwindow.h"
 #include "edge.h"
+#include "abstractitem.h"
 
 /* XXX:
  * EdgeMode - the same as connection mode for grphicsview */
 
 class Edge;
 
-class Node : public QObject, public QGraphicsEllipseItem
+class Node : public AbstractItem, public QGraphicsEllipseItem
 {
     Q_OBJECT
 
@@ -25,6 +26,7 @@ public:
     explicit Node(QGraphicsItem *parent = Q_NULLPTR);
     ~Node();
 
+    virtual int id() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     void setText(const QString string);
@@ -59,7 +61,6 @@ private slots:
     void signalSender(); /* XXX: Wrapper for adding additional info */
 
 signals:
-    void menuItemSelected(QAction*, Node*);
     void setMode(int);
     void setEdgeSelection(bool);
 

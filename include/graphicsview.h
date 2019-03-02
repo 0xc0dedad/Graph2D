@@ -14,6 +14,7 @@
 #include "mainwindow.h"
 #include "node.h"
 #include "edge.h"
+#include "abstractitem.h"
 
 class MainWindow;
 class Node;
@@ -25,7 +26,8 @@ enum Mode
     Renaming,
     Connecting,
     Moving,
-    Deleting,
+    DeletingNode,
+    DeletingEdge,
     None = -1
 };
 
@@ -76,7 +78,7 @@ private:
     bool isNodeIntersected(QRectF rect) const;
 
 public slots:
-    void modeHandler(QAction*, Node*);
+    void modeHandler(QAction*, AbstractItem*);
     void setMode(int);
 
 signals:
@@ -86,6 +88,7 @@ private:
         QGraphicsScene *m_scene;
         Mode m_mode;
         Node *m_selected_node;
+        Edge *m_selected_edge;
         QVector<Node*> m_nodes;
         bool m_moving_captured;
 };

@@ -3,7 +3,8 @@
 unsigned Node::m_counter = 0;
 
 Node::Node(const QRectF &rect, QGraphicsItem *parent)
-    : QGraphicsEllipseItem(rect, parent),
+    : AbstractItem(nullptr),
+      QGraphicsEllipseItem(rect, parent),
       m_text(QString::number(++m_counter)),
       m_edge_mode(false),
       m_edges(0),
@@ -13,7 +14,8 @@ Node::Node(const QRectF &rect, QGraphicsItem *parent)
 }
 
 Node::Node(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent)
-    : QGraphicsEllipseItem(x, y, w, h, parent),
+    : AbstractItem(nullptr),
+      QGraphicsEllipseItem(x, y, w, h, parent),
       m_text(QString::number(++m_counter)),
       m_edge_mode(false),
       m_edges(0),
@@ -23,7 +25,8 @@ Node::Node(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent)
 }
 
 Node::Node(QGraphicsItem *parent)
-    : QGraphicsEllipseItem(parent),
+    : AbstractItem(nullptr),
+      QGraphicsEllipseItem(parent),
       m_text(QString::number(++m_counter)),
       m_edge_mode(false),
       m_edges(0),
@@ -37,6 +40,11 @@ Node::~Node()
 
 }
 
+int Node::id() const
+{
+    return ItemID::NodeID;
+}
+
 void Node::init()
 {
     GraphicsView *handler = MainWindow::instance().getView();
@@ -46,8 +54,6 @@ void Node::init()
     if (!handler)
         LOG_EXIT("Invalid handler", );
 
-    connect(this, SIGNAL(menuItemSelected(QAction*, Node*)), handler,
-     SLOT(modeHandler(QAction*, Node*)));
     connect(handler, SIGNAL(setConnectionMode(bool)), this,
      SLOT(setConnectionMode(bool)));
     connect(this, SIGNAL(setMode(int)), handler, SLOT(setMode(int)));
@@ -68,7 +74,7 @@ void Node::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     QMenu menu;
     QStringList lst;
 
-    lst << "Rename" << "Connect..." << "Move..." << "Delete";
+    lst << "Rename" << "Connect..." << "Move..." << "Delete node";
 
     for(int i=0; i<lst.size(); i++)
         menu.addAction(lst[i], this, SLOT(signalSender()));

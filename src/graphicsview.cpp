@@ -4,7 +4,8 @@ str2mode_t str2mode_arr[] = {
   { .str = "Rename", .mode = Renaming },
   { .str = "Connect...", .mode = Connecting },
   { .str = "Move...", .mode = Moving },
-  { .str = "Delete", .mode = Deleting },
+  { .str = "Delete node", .mode = DeletingNode },
+  { .str = "Delete edge", .mode = DeletingEdge },
   { NULL, None }
 };
 
@@ -13,6 +14,7 @@ GraphicsView::GraphicsView(QWidget *parent)
       m_scene(nullptr),
       m_mode(Default),
       m_selected_node(nullptr),
+      m_selected_edge(nullptr),
       m_moving_captured(false)
 {
     QSize size = sizeHint();
@@ -75,22 +77,48 @@ bool GraphicsView::isNodeIntersected(QRectF rect) const
     return false;
 }
 
-void GraphicsView::modeHandler(QAction *action, Node *sndr)
+void GraphicsView::modeHandler(QAction *action, AbstractItem *sndr)
 {
     if (!action || !sndr)
         LOG_EXIT("Invalid parameter", );
 
-    m_mode = str2mode(action->text());
-    m_selected_node = sndr;
-
-    switch (m_mode)
+    switch (sndr->id())
     {
-        case Deleting:
-        deleteNode(sndr);
+        case AbstractItem::NodeID:
+        if (!(m_selected_node = dynamic_cast<Node*> (sndr)))
+            LOG_DEBUG("Invalid casting to Node class");
+        break;
+
+        case AbstractItem::EdgeID:
+        if (!(m_selected_edge = dynamic_cast<Edge*> (sndr)))
+            LOG_DEBUG("Invalid casting to Edge class");
         break;
 
         default:
+        LOG_DEBUG("Invalid sender!");
+        return;
+    }
+
+    switch ((m_mode = str2mode(action->text())))
+    {
+        case DeletingNode:
+        deleteNode(m_selected_node);
         break;
+
+        case DeletingEdge:
+        /* Delete edge */
+        break;
+
+        case Default:
+        case Renaming:
+        case Connecting:
+        case Moving:
+        break;
+
+        case None:
+        default:
+        LOG_DEBUG("Invalid mode!");
+        return;
     }
 
     if (m_mode != Connecting)
@@ -141,7 +169,7 @@ void GraphicsView::addEdge(qreal x1, qreal y1, qreal x2, qreal y2)
     Edge *item = new Edge;
 
     item->setLine(x1, y1, x2, y2);
-    item->setPen(QPen(Qt::white, 1, Qt::SolidLine));
+    item->setPen(QPen(Qt::white, 1.5, Qt::SolidLine));
 
     if (!m_selected_node)
     {

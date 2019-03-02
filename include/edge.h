@@ -5,10 +5,11 @@
 #include <QObject>
 
 #include "node.h"
+#include "abstractitem.h"
 
 class Node;
 
-class Edge : public QObject, public QGraphicsLineItem
+class Edge : public AbstractItem, public QGraphicsLineItem
 {
     Q_OBJECT
 
@@ -18,8 +19,10 @@ public:
       QGraphicsItem *parent = Q_NULLPTR);
     ~Edge();
 
+    virtual int id() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
      QWidget *widget);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     bool isEdgeSelected() const;
     void setVertices(Node *first, Node *second);
     QPair<Node*, Node*> getVertices() const;
@@ -31,6 +34,7 @@ public:
 
 private slots:
     void setSelection(bool);
+    void signalSender();
 
 private:
     bool m_is_selected;
