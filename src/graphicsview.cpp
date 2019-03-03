@@ -6,6 +6,8 @@ str2mode_t str2mode_arr[] = {
   { .str = "Move...", .mode = Moving },
   { .str = "Delete node", .mode = DeletingNode },
   { .str = "Delete edge", .mode = DeletingEdge },
+  { .str = "Mark as start", .mode = MarkAsStart },
+  { .str = "Mark as finish", .mode = MarkAsFinish },
   { NULL, None }
 };
 
@@ -15,7 +17,9 @@ GraphicsView::GraphicsView(QWidget *parent)
       m_mode(Default),
       m_selected_node(nullptr),
       m_selected_edge(nullptr),
-      m_moving_captured(false)
+      m_moving_captured(false),
+      m_start_node(nullptr),
+      m_finish_node(nullptr)
 {
     QSize size = sizeHint();
 
@@ -77,6 +81,44 @@ bool GraphicsView::isNodeIntersected(QRectF rect) const
     return false;
 }
 
+void GraphicsView::markNode(Node *node, int mark)
+{
+    if (!node || mark > MarkAsFinish || mark < MarkAsStart)
+        LOG_EXIT("Invalid parameter", );
+
+    if (mark == MarkAsStart)
+    {
+        if (m_start_node == node)
+            LOG_EXIT("Current node is marked!", );
+
+        m_start_node = node;
+        m_start_node->setBrush(QBrush(QColor(82, 215, 104), Qt::SolidPattern));
+    }
+
+    if (mark == MarkAsFinish)
+    {
+        if (m_finish_node == node)
+            LOG_EXIT("Current node is marked!", );
+
+        m_finish_node = node;
+        m_finish_node->setBrush(QBrush(QColor(198, 50, 27), Qt::SolidPattern));
+    }
+
+    updateMarks();
+    setMode(Default);
+}
+
+void GraphicsView::updateMarks()
+{
+    for(int i=0; i<m_nodes.size(); i++)
+    {
+        if (m_nodes[i] == m_start_node || m_nodes[i] == m_finish_node)
+            continue;
+
+        m_nodes[i]->setBrush(QBrush(Qt::white, Qt::SolidPattern));
+    }
+}
+
 void GraphicsView::modeHandler(QAction *action, AbstractItem *sndr)
 {
     if (!action || !sndr)
@@ -107,6 +149,14 @@ void GraphicsView::modeHandler(QAction *action, AbstractItem *sndr)
 
         case DeletingEdge:
         deleteEdge(m_selected_edge);
+        break;
+
+        case MarkAsStart:
+        markNode(m_selected_node, MarkAsStart);
+        break;
+
+        case MarkAsFinish:
+        markNode(m_selected_node, MarkAsFinish);
         break;
 
         case Default:
@@ -236,8 +286,14 @@ void GraphicsView::deleteNode(Node *node)
 
     m_scene->removeItem(node);
     removeNode(node);
-    delete node;
 
+    if (node == m_start_node)
+        m_start_node = nullptr;
+
+    if (node == m_finish_node)
+        m_finish_node = nullptr;
+
+    delete node;
     setMode(Default);
 }
 

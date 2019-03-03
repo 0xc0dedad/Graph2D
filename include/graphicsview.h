@@ -28,6 +28,8 @@ enum Mode
     Moving,
     DeletingNode,
     DeletingEdge,
+    MarkAsStart,
+    MarkAsFinish,
     None = -1
 };
 
@@ -77,6 +79,8 @@ private:
     QGraphicsScene *createScene(QWidget *parent, QGraphicsScene **scene);
     size_t horizontalOffset() const;
     bool isNodeIntersected(QRectF rect) const;
+    void markNode(Node *node, int mark);
+    void updateMarks();
 
 public slots:
     void modeHandler(QAction*, AbstractItem*);
@@ -92,6 +96,8 @@ private:
         Edge *m_selected_edge;
         QVector<Node*> m_nodes;
         bool m_moving_captured;
+        Node *m_start_node;
+        Node *m_finish_node;
 };
 
 extern str2mode_t str2mode_arr[];
