@@ -120,8 +120,8 @@ void Node::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     QMenu menu;
     QStringList lst;
 
-    lst << "Rename" << "Connect..." << "Move..." << "Delete node" <<
-           "Mark as start" << "Mark as finish";
+    lst << "Connect..." << "Move..." << "Delete node" <<
+        "Mark as start" << "Mark as finish";
 
     for(int i=0; i<lst.size(); i++)
         menu.addAction(lst[i], this, SLOT(signalSender()));

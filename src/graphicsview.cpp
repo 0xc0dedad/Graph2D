@@ -1,7 +1,6 @@
 #include "graphicsview.h"
 
 str2mode_t str2mode_arr[] = {
-  { .str = "Rename", .mode = Renaming },
   { .str = "Connect...", .mode = Connecting },
   { .str = "Move...", .mode = Moving },
   { .str = "Delete node", .mode = DeletingNode },
@@ -160,7 +159,6 @@ void GraphicsView::modeHandler(QAction *action, AbstractItem *sndr)
         break;
 
         case Default:
-        case Renaming:
         case Connecting:
         case Moving:
         break;

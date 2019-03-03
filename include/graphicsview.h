@@ -23,7 +23,6 @@ class Edge;
 enum Mode
 {
     Default,
-    Renaming,
     Connecting,
     Moving,
     DeletingNode,
