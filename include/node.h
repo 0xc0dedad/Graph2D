@@ -54,6 +54,8 @@ protected:
 
 private:
     void init();
+    int findValidName() const;
+    Node *findNodeByName(int name) const;
 
 public slots:
     void setConnectionMode(bool);
@@ -67,7 +69,6 @@ signals:
 
 private:
     QString m_text;
-    static unsigned m_counter;
     bool m_edge_mode;
     QVector<Edge*> m_edges;
     QVector<Node*> m_neighbors;

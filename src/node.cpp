@@ -1,11 +1,8 @@
 #include "node.h"
 
-unsigned Node::m_counter = 0;
-
 Node::Node(const QRectF &rect, QGraphicsItem *parent)
     : AbstractItem(nullptr),
       QGraphicsEllipseItem(rect, parent),
-      m_text(QString::number(++m_counter)),
       m_edge_mode(false),
       m_edges(0),
       m_neighbors(0)
@@ -16,7 +13,6 @@ Node::Node(const QRectF &rect, QGraphicsItem *parent)
 Node::Node(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent)
     : AbstractItem(nullptr),
       QGraphicsEllipseItem(x, y, w, h, parent),
-      m_text(QString::number(++m_counter)),
       m_edge_mode(false),
       m_edges(0),
       m_neighbors(0)
@@ -27,7 +23,6 @@ Node::Node(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent)
 Node::Node(QGraphicsItem *parent)
     : AbstractItem(nullptr),
       QGraphicsEllipseItem(parent),
-      m_text(QString::number(++m_counter)),
       m_edge_mode(false),
       m_edges(0),
       m_neighbors(0)
@@ -47,6 +42,7 @@ int Node::id() const
 
 void Node::init()
 {
+    int name;
     GraphicsView *handler = MainWindow::instance().getView();
 
     setCursor(Qt::PointingHandCursor);
@@ -54,9 +50,59 @@ void Node::init()
     if (!handler)
         LOG_EXIT("Invalid handler", );
 
+    if ((name = findValidName()) != -1)
+        m_text = QString::number(name);
+    else
+        LOG_EXIT("Invalid name!", );
+
     connect(handler, SIGNAL(setConnectionMode(bool)), this,
      SLOT(setConnectionMode(bool)));
     connect(this, SIGNAL(setMode(int)), handler, SLOT(setMode(int)));
+}
+
+int Node::findValidName() const
+{
+    int name;
+    Node *first;
+    GraphicsView *view = MainWindow::instance().getView();
+    QVector<Node*> nodes;
+
+    if (!view)
+        LOG_EXIT("Invalid pointer", -1);
+
+    nodes = view->getNodes();
+
+    if (!(first = findNodeByName(1)))
+        return 1;
+
+    name = first->text().toInt();
+
+    while (true)
+    {
+        if (!findNodeByName(++name))
+            return name;
+    }
+
+    return -1;
+}
+
+Node* Node::findNodeByName(int name) const
+{
+    GraphicsView *view = MainWindow::instance().getView();
+    QVector<Node*> nodes;
+
+    if (!view)
+        LOG_EXIT("Invalid pointer", nullptr);
+
+    nodes = view->getNodes();
+
+    for(int i=0; i<nodes.size(); i++)
+    {
+        if (nodes[i]->text().toInt() == name)
+            return nodes[i];
+    }
+
+    return nullptr;
 }
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,

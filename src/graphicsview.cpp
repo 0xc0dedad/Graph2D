@@ -339,6 +339,11 @@ void GraphicsView::removeNode(Node *node)
             m_nodes.remove(i);
 }
 
+QVector<Node *> GraphicsView::getNodes() const
+{
+    return m_nodes;
+}
+
 void GraphicsView::mousePressEvent(QMouseEvent *event)
 {
     size_t radius = 20;
