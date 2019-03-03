@@ -57,17 +57,23 @@ void MainWindow::layout()
 QToolBar *MainWindow::createSettingsBar(QWidget *parent, QToolBar **bar)
 {
     QString path = pathToImages();
+    QStringList lst;
+
+    lst << "settings.png" << "result.png" << "play.png" << "restore.png";
 
     if (!createToolBar(parent, bar))
         LOG_EXIT("", nullptr);
 
-    if (!addBarAction(bar, QPixmap(path + "settings.png"), "",
-         QSize(24, 24), this, SLOT(showSettings()), false))
+    for(int i=0; i<lst.size(); i++)
     {
-            LOG_EXIT("Can't add bar action!", nullptr);
+        if (!addBarAction(bar, QPixmap(path + lst[i]), lst[i].split(".")[0],
+             QSize(24, 24), this, SLOT(showSettings()), false))
+        {
+                LOG_EXIT("Can't add bar action!", nullptr);
+        }
     }
 
-    (*bar)->setFixedSize(35, 35);
+    (*bar)->setFixedWidth(35);
 
     return *bar;
 }
@@ -87,9 +93,17 @@ void MainWindow::setBackgroundColor()
 
 void MainWindow::showSettings()
 {
-    if (!m_settings)
-        m_settings = new SettingsWindow;
+    QAction *action = qobject_cast<QAction*> (sender());
 
-    if (!m_settings->isVisible())
-        m_settings->show();
+    if (!action)
+        LOG_EXIT("Invalid pointer!", );
+
+    if (action->text() == "settings")
+    {
+        if (!m_settings)
+            m_settings = new SettingsWindow;
+
+        if (!m_settings->isVisible())
+            m_settings->show();
+    }
 }

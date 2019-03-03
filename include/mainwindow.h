@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QStringList>
+
 #include "abstractwindow.h"
 #include "graphicsview.h"
 #include "settingswindow.h"

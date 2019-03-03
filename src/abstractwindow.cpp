@@ -19,6 +19,8 @@ QString AbstractWindow::pathToImages() const
 QToolBar *AbstractWindow::createToolBar(QWidget *parent, QToolBar **bar)
 {
     (*bar) = new QToolBar(parent);
+    (*bar)->setOrientation(Qt::Vertical);
+
     return *bar;
 }
 
