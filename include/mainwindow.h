@@ -3,6 +3,7 @@
 
 #include "abstractwindow.h"
 #include "graphicsview.h"
+#include "settingswindow.h"
 
 class GraphicsView;
 
@@ -32,6 +33,7 @@ private slots:
 private:
         QToolBar *m_settings_bar;
         GraphicsView *m_view;
+        SettingsWindow *m_settings;
 };
 
 #endif // MAINWINDOW_H

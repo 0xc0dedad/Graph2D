@@ -32,7 +32,9 @@ SOURCES += \
     src/abstractitem.cpp \
     src/graphicsview.cpp \
     src/node.cpp \
-    src/edge.cpp
+    src/edge.cpp \
+    src/settingswindow.cpp \
+    src/tab.cpp
 
 HEADERS += \
         include/mainwindow.h \
@@ -41,4 +43,6 @@ HEADERS += \
     include/abstractitem.h \
     include/graphicsview.h \
     include/node.h \
-    include/edge.h
+    include/edge.h \
+    include/settingswindow.h \
+    include/tab.h

@@ -3,7 +3,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : AbstractWindow(parent),
       m_settings_bar(nullptr),
-      m_view(nullptr)
+      m_view(nullptr),
+      m_settings(nullptr)
 {
     layout();
     setBackgroundColor();
@@ -11,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-
+    m_settings->deleteLater();
 }
 
 MainWindow &MainWindow::instance(QWidget *parent)
@@ -86,5 +87,9 @@ void MainWindow::setBackgroundColor()
 
 void MainWindow::showSettings()
 {
+    if (!m_settings)
+        m_settings = new SettingsWindow;
 
+    if (!m_settings->isVisible())
+        m_settings->show();
 }
