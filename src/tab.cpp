@@ -41,10 +41,22 @@ QListWidget *Tab::createAlgorithmsTab(QWidget *parent, QListWidget **list)
     QStringList lst;
     QListWidgetItem *item;
     QString path = SettingsWindow::pathToImages();
+    SettingsWindow *sw = qobject_cast<SettingsWindow*> (this->parent());
 
     lst << "Algo 1" << "Algo 2" << "Algo 3";
+
     *list = new QListWidget(parent);
     (*list)->setIconSize(QSize(10, 10));
+
+    if (!sw)
+    {
+        LOG_DEBUG("Invalid pointer");
+    }
+    else
+    {
+        connect(*list, SIGNAL(clicked(QModelIndex)), sw,
+          SLOT(setSelectedAlgorithm(QModelIndex)));
+    }
 
     for(int i=0; i<lst.size(); i++)
     {

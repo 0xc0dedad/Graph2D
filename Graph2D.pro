@@ -34,7 +34,8 @@ SOURCES += \
     src/node.cpp \
     src/edge.cpp \
     src/settingswindow.cpp \
-    src/tab.cpp
+    src/tab.cpp \
+    src/abstractalgorithm.cpp
 
 HEADERS += \
         include/mainwindow.h \
@@ -45,4 +46,5 @@ HEADERS += \
     include/node.h \
     include/edge.h \
     include/settingswindow.h \
-    include/tab.h
+    include/tab.h \
+    include/abstractalgorithm.h

@@ -4,7 +4,8 @@ MainWindow::MainWindow(QWidget *parent)
     : AbstractWindow(parent),
       m_settings_bar(nullptr),
       m_view(nullptr),
-      m_settings(nullptr)
+      m_settings(nullptr),
+      m_algorithm(nullptr)
 {
     layout();
     setBackgroundColor();
@@ -13,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     m_settings->deleteLater();
+
+    if (m_algorithm)
+        delete m_algorithm;
 }
 
 MainWindow &MainWindow::instance(QWidget *parent)
@@ -91,6 +95,33 @@ void MainWindow::setBackgroundColor()
     this->setStyleSheet("background: rgb(75, 75, 75);");
 }
 
+AbstractAlgorithm *MainWindow::createAlgorithm(QObject *parent)
+{
+    int id;
+
+    if (!m_algorithm)
+    {
+        delete m_algorithm;
+        m_algorithm = nullptr;
+    }
+
+    switch((id = m_settings ? m_settings->selectedAlgorithm() : BFS))
+    {
+        case BFS:
+        m_algorithm = new AbstractAlgorithm(parent);
+        break;
+
+        default:
+        LOG_DEBUG("Invalid algorithm:" << id);
+        return nullptr;
+
+    }
+
+    emit execute();
+
+    return m_algorithm;
+}
+
 void MainWindow::showSettings()
 {
     QAction *action = qobject_cast<QAction*> (sender());
@@ -106,4 +137,7 @@ void MainWindow::showSettings()
         if (!m_settings->isVisible())
             m_settings->show();
     }
+
+    if (action->text() == "play")
+        createAlgorithm(this);
 }

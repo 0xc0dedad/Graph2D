@@ -3,7 +3,8 @@
 SettingsWindow::SettingsWindow(QDialog *parent)
     : QDialog(parent),
       m_tabs(nullptr),
-      m_ok(nullptr)
+      m_ok(nullptr),
+      m_selected_algo(BFS)
 {
     QSize size = sizeHint();
 
@@ -24,6 +25,11 @@ QSize SettingsWindow::sizeHint() const
 QString SettingsWindow::pathToImages()
 {
     return QApplication::applicationDirPath() + "/images/";
+}
+
+AlgorithmID SettingsWindow::selectedAlgorithm() const
+{
+    return m_selected_algo;
 }
 
 void SettingsWindow::layout()
@@ -67,5 +73,21 @@ QPushButton *SettingsWindow::createButton(QWidget *parent, QString title,
 
 void SettingsWindow::submit()
 {
+    Tab *tab = qobject_cast<Tab*> (m_tabs->widget(AlgorithmsTab));
+
+    if (!tab)
+    {
+        this->close();
+        LOG_EXIT("Invalid pointer", );
+    }
+
     this->close();
+}
+
+void SettingsWindow::setSelectedAlgorithm(QModelIndex index)
+{
+    if (!index.isValid())
+        LOG_EXIT("Invalid model index", );
+
+    m_selected_algo = (AlgorithmID) index.row();
 }

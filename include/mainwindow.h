@@ -6,8 +6,10 @@
 #include "abstractwindow.h"
 #include "graphicsview.h"
 #include "settingswindow.h"
+#include "abstractalgorithm.h"
 
 class GraphicsView;
+class AbstractAlgorithm;
 
 class MainWindow : public AbstractWindow
 {
@@ -28,14 +30,18 @@ private:
         QToolBar *createSettingsBar(QWidget *parent, QToolBar **bar);
         GraphicsView *createGraphicsView(QWidget *parent, GraphicsView **view);
         void setBackgroundColor();
+        AbstractAlgorithm *createAlgorithm(QObject *parent);
 
 private slots:
         void showSettings();
+signals:
+        void execute();
 
 private:
         QToolBar *m_settings_bar;
         GraphicsView *m_view;
         SettingsWindow *m_settings;
+        AbstractAlgorithm *m_algorithm;
 };
 
 #endif // MAINWINDOW_H

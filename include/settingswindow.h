@@ -17,6 +17,13 @@ enum TabType
     SettingsTab
 };
 
+enum AlgorithmID
+{
+    BFS,
+    DFS,
+    Unknown = -1
+};
+
 class SettingsWindow : public QDialog
 {
     Q_OBJECT
@@ -26,6 +33,7 @@ public:
     ~SettingsWindow();
     QSize sizeHint() const;
     static QString pathToImages();
+    AlgorithmID selectedAlgorithm() const;
 
 private:
     void layout();
@@ -33,12 +41,16 @@ private:
     QPushButton *createButton(QWidget *parent, QString title,
      QWidget *handler, const char *slot, QPushButton **btn);
 
+public slots:
+    void setSelectedAlgorithm(QModelIndex index);
+
 private slots:
     void submit();
 
 private:
     QTabWidget *m_tabs;
     QPushButton *m_ok;
+    AlgorithmID m_selected_algo;
 };
 
 #endif // SETTINGSWINDOW_H
