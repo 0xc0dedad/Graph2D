@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "bfsalgorithm.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : AbstractWindow(parent),
@@ -71,7 +72,7 @@ QToolBar *MainWindow::createSettingsBar(QWidget *parent, QToolBar **bar)
     for(int i=0; i<lst.size(); i++)
     {
         if (!addBarAction(bar, QPixmap(path + lst[i]), lst[i].split(".")[0],
-             QSize(24, 24), this, SLOT(showSettings()), false))
+             QSize(24, 24), this, SLOT(handleControlEvent()), false))
         {
                 LOG_EXIT("Can't add bar action!", nullptr);
         }
@@ -99,7 +100,7 @@ AbstractAlgorithm *MainWindow::createAlgorithm(QObject *parent)
 {
     int id;
 
-    if (!m_algorithm)
+    if (m_algorithm)
     {
         delete m_algorithm;
         m_algorithm = nullptr;
@@ -108,7 +109,7 @@ AbstractAlgorithm *MainWindow::createAlgorithm(QObject *parent)
     switch((id = m_settings ? m_settings->selectedAlgorithm() : BFS))
     {
         case BFS:
-        m_algorithm = new AbstractAlgorithm(parent);
+        m_algorithm = new BFSAlgorithm(parent);
         break;
 
         default:
@@ -122,7 +123,16 @@ AbstractAlgorithm *MainWindow::createAlgorithm(QObject *parent)
     return m_algorithm;
 }
 
-void MainWindow::showSettings()
+void MainWindow::restoreItems()
+{
+    if (!m_view)
+        LOG_EXIT("Invalid pointer", );
+
+    m_view->markNode(m_view->getStartNode(), MarkAsStart);
+    m_view->markNode(m_view->getFinishNode(), MarkAsFinish);
+}
+
+void MainWindow::handleControlEvent()
 {
     QAction *action = qobject_cast<QAction*> (sender());
 
@@ -139,5 +149,8 @@ void MainWindow::showSettings()
     }
 
     if (action->text() == "play")
+    {
+        restoreItems();
         createAlgorithm(this);
+    }
 }

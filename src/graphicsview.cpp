@@ -87,18 +87,12 @@ void GraphicsView::markNode(Node *node, int mark)
 
     if (mark == MarkAsStart)
     {
-        if (m_start_node == node)
-            LOG_EXIT("Current node is marked!", );
-
         m_start_node = node;
         m_start_node->setBrush(QBrush(QColor(82, 215, 104), Qt::SolidPattern));
     }
 
     if (mark == MarkAsFinish)
     {
-        if (m_finish_node == node)
-            LOG_EXIT("Current node is marked!", );
-
         m_finish_node = node;
         m_finish_node->setBrush(QBrush(QColor(198, 50, 27), Qt::SolidPattern));
     }
@@ -111,10 +105,20 @@ void GraphicsView::updateMarks()
 {
     for(int i=0; i<m_nodes.size(); i++)
     {
+        QVector<Edge*> *edges = m_nodes[i]->getEdges();
+
         if (m_nodes[i] == m_start_node || m_nodes[i] == m_finish_node)
             continue;
 
         m_nodes[i]->setBrush(QBrush(Qt::white, Qt::SolidPattern));
+
+        for(int j=0; j<edges->size(); j++)
+        {
+            if ((*edges)[j]->pen().color() == Qt::white)
+                continue;
+
+            (*edges)[j]->setPen(QPen(Qt::white, 1.5, Qt::SolidLine));
+        }
     }
 }
 
@@ -340,6 +344,27 @@ void GraphicsView::removeNode(Node *node)
 QVector<Node *> GraphicsView::getNodes() const
 {
     return m_nodes;
+}
+
+Node *GraphicsView::getStartNode() const
+{
+    return m_start_node;
+}
+
+Node *GraphicsView::getFinishNode() const
+{
+    return m_finish_node;
+}
+
+Node *GraphicsView::findNodeByIndex(int index) const
+{
+    for(int i=0; i<m_nodes.size(); i++)
+    {
+        if (m_nodes[i]->text().toInt() == (index + 1))
+            return m_nodes[i];
+    }
+
+    return nullptr;
 }
 
 void GraphicsView::mousePressEvent(QMouseEvent *event)

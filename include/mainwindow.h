@@ -31,9 +31,10 @@ private:
         GraphicsView *createGraphicsView(QWidget *parent, GraphicsView **view);
         void setBackgroundColor();
         AbstractAlgorithm *createAlgorithm(QObject *parent);
+        void restoreItems();
 
 private slots:
-        void showSettings();
+        void handleControlEvent();
 signals:
         void execute();
 

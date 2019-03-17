@@ -68,6 +68,10 @@ public:
     /* XXX: Remove from m_nodes vector */
     void removeNode(Node *node);
     QVector<Node*> getNodes() const;
+    Node *getStartNode() const;
+    Node *getFinishNode() const;
+    Node *findNodeByIndex(int index) const;
+    void markNode(Node *node, int mark);
 
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -79,7 +83,6 @@ private:
     QGraphicsScene *createScene(QWidget *parent, QGraphicsScene **scene);
     size_t horizontalOffset() const;
     bool isNodeIntersected(QRectF rect) const;
-    void markNode(Node *node, int mark);
     void updateMarks();
 
 public slots:

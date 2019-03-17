@@ -35,7 +35,8 @@ SOURCES += \
     src/edge.cpp \
     src/settingswindow.cpp \
     src/tab.cpp \
-    src/abstractalgorithm.cpp
+    src/abstractalgorithm.cpp \
+    src/bfsalgorithm.cpp
 
 HEADERS += \
         include/mainwindow.h \
@@ -47,4 +48,5 @@ HEADERS += \
     include/edge.h \
     include/settingswindow.h \
     include/tab.h \
-    include/abstractalgorithm.h
+    include/abstractalgorithm.h \
+    include/bfsalgorithm.h
