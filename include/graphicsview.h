@@ -29,6 +29,7 @@ enum Mode
     DeletingEdge,
     MarkAsStart,
     MarkAsFinish,
+    Directable,
     None = -1
 };
 
@@ -72,6 +73,7 @@ public:
     Node *getFinishNode() const;
     Node *findNodeByIndex(int index) const;
     void markNode(Node *node, int mark);
+    void directableEdge(Edge *edge);
 
 protected:
     void mousePressEvent(QMouseEvent *event);

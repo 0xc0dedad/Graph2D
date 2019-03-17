@@ -31,6 +31,8 @@ public:
     bool isExist(Node *node) const;
     QPointF getFirstVertexPos() const;
     QPointF getSecondVertexPos() const;
+    void directable(bool able);
+    bool isDirectable() const;
 
 private slots:
     void setSelection(bool);
@@ -39,7 +41,7 @@ private slots:
 private:
     bool m_is_selected;
     QPair<Node*, Node*> m_vertices;
-
+    bool m_directable;
 };
 
 #endif // EDGE_H

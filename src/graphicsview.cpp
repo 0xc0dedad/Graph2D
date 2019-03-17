@@ -7,6 +7,7 @@ str2mode_t str2mode_arr[] = {
   { .str = "Delete edge", .mode = DeletingEdge },
   { .str = "Mark as start", .mode = MarkAsStart },
   { .str = "Mark as finish", .mode = MarkAsFinish },
+  { .str = "Directable", .mode = Directable },
   { NULL, None }
 };
 
@@ -101,6 +102,14 @@ void GraphicsView::markNode(Node *node, int mark)
     setMode(Default);
 }
 
+void GraphicsView::directableEdge(Edge *edge)
+{
+    if (!edge->isDirectable())
+        edge->directable(true);
+
+    setMode(Default);
+}
+
 void GraphicsView::updateMarks()
 {
     for(int i=0; i<m_nodes.size(); i++)
@@ -160,6 +169,10 @@ void GraphicsView::modeHandler(QAction *action, AbstractItem *sndr)
 
         case MarkAsFinish:
         markNode(m_selected_node, MarkAsFinish);
+        break;
+
+        case Directable:
+        directableEdge(m_selected_edge);
         break;
 
         case Default:

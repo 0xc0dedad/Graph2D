@@ -3,7 +3,8 @@
 Edge::Edge(QGraphicsLineItem *parent)
     : AbstractItem(nullptr),
       QGraphicsLineItem(parent),
-      m_is_selected(true)
+      m_is_selected(true),
+      m_directable(false)
 {
 
 }
@@ -11,7 +12,8 @@ Edge::Edge(QGraphicsLineItem *parent)
 Edge::Edge(qreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem *parent)
     : AbstractItem(nullptr),
       QGraphicsLineItem(x1, y1, x2, y2, parent),
-      m_is_selected(true)
+      m_is_selected(true),
+      m_directable(false)
 {
 
 }
@@ -30,12 +32,22 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
  QWidget *widget)
 {
     QGraphicsLineItem::paint(painter, option, widget);
+
+    if (m_directable)
+    {
+        int radius = 10;
+
+        painter->setBrush(QBrush(Qt::black, Qt::SolidPattern));
+        painter->drawEllipse(line().x2() - radius / 2,
+         line().y2() - radius / 2, radius, radius);
+    }
 }
 
 void Edge::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     QMenu menu;
 
+    menu.addAction("Directable", this, SLOT(signalSender()));
     menu.addAction("Delete edge", this, SLOT(signalSender()));
     menu.exec(event->screenPos());
 }
@@ -85,6 +97,17 @@ QPointF Edge::getFirstVertexPos() const
 QPointF Edge::getSecondVertexPos() const
 {
     return m_vertices.second->rect().center();
+}
+
+void Edge::directable(bool able)
+{
+    m_directable = able;
+    this->update();
+}
+
+bool Edge::isDirectable() const
+{
+    return m_directable;
 }
 
 void Edge::setSelection(bool value)
