@@ -33,6 +33,7 @@ public:
     QPointF getSecondVertexPos() const;
     void directable(bool able);
     bool isDirectable() const;
+    QRectF getArrow() const;
 
 private slots:
     void setSelection(bool);

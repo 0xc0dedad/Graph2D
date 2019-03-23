@@ -110,6 +110,14 @@ bool Edge::isDirectable() const
     return m_directable;
 }
 
+QRectF Edge::getArrow() const
+{
+    int radius = 10;
+
+    return QRectF(line().x2() - radius / 2,
+            line().y2() - radius / 2, radius, radius);
+}
+
 void Edge::setSelection(bool value)
 {
     m_is_selected = value;

@@ -38,6 +38,7 @@ public:
     QString text() const;
 
     void addEdge(Node *first, Node *second, Edge **edge);
+    bool delEdge(Edge *edge);
     void modifyEdgeVertices(Edge *edge, Node *first, Node *second);
     Edge *findConnectedEdge(Node *node) const;
 

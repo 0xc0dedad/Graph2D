@@ -156,6 +156,22 @@ void Node::addEdge(Node *first, Node *second, Edge **edge)
     m_edges.push_back(*edge);
 }
 
+bool Node::delEdge(Edge *edge)
+{
+    int index;
+
+    if (!edge)
+        LOG_EXIT("Invalid pointer", false);
+
+    if ((index = findEdge(edge)) != -1)
+    {
+        getEdges()->remove(index);
+        return true;
+    }
+
+    return false;
+}
+
 void Node::modifyEdgeVertices(Edge *edge, Node *first, Node *second)
 {
     if (!edge)

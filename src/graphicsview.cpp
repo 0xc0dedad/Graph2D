@@ -104,8 +104,26 @@ void GraphicsView::markNode(Node *node, int mark)
 
 void GraphicsView::directableEdge(Edge *edge)
 {
+    QRectF arrow;
+    Node *node = nullptr;
+    QPair<Node*, Node*> vertices;
+
+    if (!edge)
+        LOG_EXIT("Invalid pointer", );
+
     if (!edge->isDirectable())
         edge->directable(true);
+
+    vertices = edge->getVertices();
+    arrow = edge->getArrow();
+
+    if (vertices.first->rect().intersects(arrow))
+        node = vertices.first;
+    else if (vertices.second->rect().intersects(arrow))
+        node = vertices.second;
+
+    if (!node || !node->delEdge(edge))
+        LOG_DEBUG("Invalid parameter: " << (void*) node);
 
     setMode(Default);
 }
