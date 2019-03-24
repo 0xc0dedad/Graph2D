@@ -143,6 +143,60 @@ void Tab::writeUIConf(QString filename) const
     file.close();
 }
 
+void Tab::readUIConf(QTextStream &stream) const
+{
+    QPointF point;
+    GraphicsView *view = MainWindow::instance().getView();
+    size_t radius = 20;
+
+    if (!view)
+        LOG_EXIT("Invalid pointer", );
+
+    while (!stream.atEnd())
+    {
+        QString subline;
+        QString line = stream.readLine();
+
+        subline = line.split(" ")[0];
+        point.setX(subline.toDouble());
+        subline = line.split(" ")[1];
+        point.setY(subline.toDouble());
+
+        view->addNode(radius, QBrush(Qt::white, Qt::SolidPattern), point);
+    }
+}
+
+void Tab::readGraph(QString filename) const
+{
+    QTextStream stream;
+    QVector<QVector<int> > graph;
+    QFile file(filename);
+    GraphicsView *view = MainWindow::instance().getView();
+
+    if (!view)
+        LOG_EXIT("Invalid pointer", );
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        LOG_EXIT("Can't open file!", );
+
+    stream.setDevice(&file);
+
+    while(!stream.atEnd())
+    {
+        QVector<int> temp;
+        QString line = stream.readLine();
+        QStringList list = line.split(" ");
+
+        for(int i=0; i<list.size(); i++)
+            temp.push_back(list[i].toInt());
+
+        graph.push_back(temp);
+    }
+
+    file.close();
+    view->restoreEdges(graph);
+}
+
 void Tab::download()
 {
     QFile file;
@@ -163,7 +217,7 @@ void Tab::download()
     if (filename.isEmpty())
         LOG_EXIT("Filename is empty", );
 
-    file.setFileName(filename);
+    file.setFileName(filename + ".txt");
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         LOG_EXIT("Can't open file!", );
@@ -176,5 +230,22 @@ void Tab::download()
 
 void Tab::upload()
 {
+    QFile file;
+    QString filename;
+    QTextStream stream;
 
+    filename = QFileDialog::getOpenFileName(this, "Open file...", "", "*.txt");
+
+    if (filename.isEmpty())
+        LOG_EXIT("Filename is empty", );
+
+    file.setFileName(filename.split(".")[0] + ".conf");
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        LOG_EXIT("Can't open file!: " << filename, );
+
+    stream.setDevice(&file);
+    readUIConf(stream);
+    file.close();
+    readGraph(filename);
 }

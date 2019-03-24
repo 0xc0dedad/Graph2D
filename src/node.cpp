@@ -72,37 +72,18 @@ int Node::findValidName() const
 
     nodes = view->getNodes();
 
-    if (!(first = findNodeByName(1)))
+    if (!(first = view->findNodeByName(1)))
         return 1;
 
     name = first->text().toInt();
 
     while (true)
     {
-        if (!findNodeByName(++name))
+        if (!view->findNodeByName(++name))
             return name;
     }
 
     return -1;
-}
-
-Node* Node::findNodeByName(int name) const
-{
-    GraphicsView *view = MainWindow::instance().getView();
-    QVector<Node*> nodes;
-
-    if (!view)
-        LOG_EXIT("Invalid pointer", nullptr);
-
-    nodes = view->getNodes();
-
-    for(int i=0; i<nodes.size(); i++)
-    {
-        if (nodes[i]->text().toInt() == name)
-            return nodes[i];
-    }
-
-    return nullptr;
 }
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,

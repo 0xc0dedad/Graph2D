@@ -128,6 +128,58 @@ void GraphicsView::directableEdge(Edge *edge)
     setMode(Default);
 }
 
+void GraphicsView::restoreEdges(QVector<QVector<int> > graph)
+{
+    Node *row, *col;
+    Edge *edge;
+
+    if (graph.isEmpty())
+        LOG_EXIT("Vector is empty", );
+
+    for(int i=0; i<graph.size(); i++)
+    {
+        if(!(row = findNodeByIndex(i)))
+            LOG_EXIT("Invalid pointer", );
+
+        for(int j=0; j<graph[i].size(); j++)
+        {
+            if (graph[i][j])
+            {
+                if (!(col = findNodeByIndex(j)))
+                    LOG_EXIT("Invalid pointer", );
+
+                if (row->isAmongNeighbors(col))
+                    continue;
+
+                edge = addEdge(row->rect().center().x(), row->rect().center().y(),
+                       col->rect().center().x(), col->rect().center().y(),
+                       row, col);
+
+                row->addNeighbor(col);
+
+                if (graph[j][i])
+                {
+                    col->addEdge(row, col, &edge);
+                    col->addNeighbor(row);
+                }
+                else
+                    edge->directable(true);
+            }
+        }
+    }
+}
+
+Node* GraphicsView::findNodeByName(int name) const
+{
+    for(int i=0; i<m_nodes.size(); i++)
+    {
+        if (m_nodes[i]->text().toInt() == name)
+            return m_nodes[i];
+    }
+
+    return nullptr;
+}
+
 void GraphicsView::updateMarks()
 {
     for(int i=0; i<m_nodes.size(); i++)
@@ -249,21 +301,24 @@ void GraphicsView::addNode(const size_t radius, const QBrush brush,
     m_nodes.push_back(item);
 }
 
-void GraphicsView::addEdge(qreal x1, qreal y1, qreal x2, qreal y2)
+Edge *GraphicsView::addEdge(qreal x1, qreal y1, qreal x2, qreal y2,
+ Node *first, Node *second)
 {
     Edge *item = new Edge;
 
     item->setLine(x1, y1, x2, y2);
     item->setPen(QPen(Qt::white, 1.5, Qt::SolidLine));
 
-    if (!m_selected_node)
+    if (!first)
     {
         delete item;
-        LOG_EXIT("Can't add edge!", );
+        LOG_EXIT("Can't add edge!", nullptr);
     }
 
     m_scene->addItem(item);
-    m_selected_node->addEdge(m_selected_node, nullptr, &item);
+    first->addEdge(first, second, &item);
+
+    return item;
 }
 
 Mode GraphicsView::getMode() const
@@ -447,7 +502,8 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event)
         }
         else
         {
-            addEdge(center.x(), center.y(), pos.x(), pos.y());
+            addEdge(center.x(), center.y(), pos.x(), pos.y(),
+             m_selected_node, nullptr);
             emit setConnectionMode(true);
         }
     }

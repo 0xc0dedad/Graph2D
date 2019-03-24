@@ -60,7 +60,8 @@ public:
     void setBrush(QBrush brush);
     QGraphicsScene *getScene() const;
     void addNode(const size_t radius, const QBrush brush, const QPointF pos);
-    void addEdge(qreal x1, qreal y1, qreal x2, qreal y2);
+    Edge *addEdge(qreal x1, qreal y1, qreal x2, qreal y2, Node *node,
+     Node *second);
     Mode getMode() const;
     Node *getSelectedNode() const;
     void disableNodesConnectionModes();
@@ -74,6 +75,8 @@ public:
     Node *findNodeByIndex(int index) const;
     void markNode(Node *node, int mark);
     void directableEdge(Edge *edge);
+    void restoreEdges(QVector<QVector<int> > graph);
+    Node *findNodeByName(int name) const;
 
 protected:
     void mousePressEvent(QMouseEvent *event);

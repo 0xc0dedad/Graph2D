@@ -56,7 +56,6 @@ protected:
 private:
     void init();
     int findValidName() const;
-    Node *findNodeByName(int name) const;
 
 public slots:
     void setConnectionMode(bool);
