@@ -85,6 +85,11 @@ void AbstractAlgorithm::initGraph()
         debugGraph();
 }
 
+QVector<QVector<int> > AbstractAlgorithm::getGraph() const
+{
+    return m_graph;
+}
+
 void AbstractAlgorithm::debugGraph()
 {
     qDebug() << m_graph;

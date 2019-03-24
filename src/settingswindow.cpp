@@ -55,6 +55,7 @@ QTabWidget *SettingsWindow::createTabs(QWidget *parent, QTabWidget **tabs)
 
     (*tabs)->addTab(new Tab(AlgorithmsTab, parent), "Algorithms");
     (*tabs)->addTab(new Tab(SettingsTab, parent), "Settings");
+    (*tabs)->addTab(new Tab(StorageTab, parent), "Storage");
 
     return *tabs;
 }

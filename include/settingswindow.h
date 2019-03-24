@@ -14,7 +14,8 @@
 enum TabType
 {
     AlgorithmsTab,
-    SettingsTab
+    SettingsTab,
+    StorageTab
 };
 
 enum AlgorithmID

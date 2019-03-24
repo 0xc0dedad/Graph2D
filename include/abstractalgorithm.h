@@ -35,10 +35,11 @@ class AbstractAlgorithm : public QObject
 public:
      explicit AbstractAlgorithm(QObject *parent = Q_NULLPTR);
      ~AbstractAlgorithm();
+     void initGraph();
+     QVector<QVector<int> > getGraph() const;
 
 private:
     bool resizeGraph(GraphicsView *view);
-    void initGraph();
     void debugGraph();
     int getIndex(int val) const;
     void checkBranch(QVector<int> &marked, Node *finish, GraphicsView *view);
