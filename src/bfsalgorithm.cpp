@@ -15,12 +15,11 @@ void BFSAlgorithm::algorithm(Node *start, Node *finish, GraphicsView *view)
 {
     int id;
     bool debug, reset, found = false;
-    bool *visited = new bool[10]();
+    bool *visited = new bool[m_graph.size()]();
 
     if (!visited)
     {
         LOG_DEBUG("Invalid pointer");
-        goto Exit;
     }
 
     id = start->text().toInt() - 1;
