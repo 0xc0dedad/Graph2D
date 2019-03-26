@@ -47,7 +47,7 @@ void BFSAlgorithm::algorithm(Node *start, Node *finish, GraphicsView *view)
         }
 
         /* Mark opened nodes until not found connected one */
-        if (!found)
+        if (!found && node != start)
             node->setBrush(QBrush(Qt::yellow, Qt::SolidPattern));
 
         for(int i=0; i<m_graph[current].size(); i++)
