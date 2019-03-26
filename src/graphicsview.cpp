@@ -180,6 +180,18 @@ Node* GraphicsView::findNodeByName(int name) const
     return nullptr;
 }
 
+void GraphicsView::deleteAll()
+{
+   while(!m_nodes.isEmpty())
+    deleteNode(*m_nodes.begin());
+
+    m_nodes.clear();
+    m_scene->clear();
+    m_selected_edge = nullptr;
+    m_selected_node = nullptr;
+    setMode(Default);
+}
+
 void GraphicsView::updateMarks()
 {
     for(int i=0; i<m_nodes.size(); i++)
@@ -341,11 +353,13 @@ void GraphicsView::deleteNode(Node *node)
 {
     Edge *edge;
     QVector<Node*> *neighbors;
+    QVector<Edge*> *edges;
 
     if (!node)
         LOG_EXIT("Invalid pointer", );
 
     neighbors = node->getNeighbors();
+    edges = node->getEdges();
 
     for(int i=0; i<neighbors->size(); i++)
     {
@@ -369,6 +383,17 @@ void GraphicsView::deleteNode(Node *node)
 
             m_scene->removeItem(edge);
             delete edge;
+        }
+    }
+
+    for(int i=0; i<edges->size(); i++)
+    {
+        Edge *e = (*edges)[i];
+
+        if (e->isDirectable())
+        {
+            m_scene->removeItem(e);
+            delete e;
         }
     }
 

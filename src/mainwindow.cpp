@@ -136,7 +136,7 @@ void MainWindow::handleControlEvent()
 {
     QAction *action = qobject_cast<QAction*> (sender());
 
-    if (!action)
+    if (!action || !m_view)
         LOG_EXIT("Invalid pointer!", );
 
     if (action->text() == "settings")
@@ -153,4 +153,7 @@ void MainWindow::handleControlEvent()
         restoreItems();
         createAlgorithm(this);
     }
+
+    if (action->text() == "restore")
+        m_view->deleteAll();
 }

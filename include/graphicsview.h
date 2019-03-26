@@ -77,6 +77,7 @@ public:
     void directableEdge(Edge *edge);
     void restoreEdges(QVector<QVector<int> > graph);
     Node *findNodeByName(int name) const;
+    void deleteAll();
 
 protected:
     void mousePressEvent(QMouseEvent *event);
