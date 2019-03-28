@@ -36,7 +36,8 @@ SOURCES += \
     src/settingswindow.cpp \
     src/tab.cpp \
     src/abstractalgorithm.cpp \
-    src/bfsalgorithm.cpp
+    src/bfsalgorithm.cpp \
+    src/raport.cpp
 
 HEADERS += \
         include/mainwindow.h \
@@ -49,4 +50,5 @@ HEADERS += \
     include/settingswindow.h \
     include/tab.h \
     include/abstractalgorithm.h \
-    include/bfsalgorithm.h
+    include/bfsalgorithm.h \
+    include/raport.h

@@ -34,9 +34,6 @@ void BFSAlgorithm::algorithm(Node *start, Node *finish, GraphicsView *view)
         Node *node;
         int current = m_list.front();
 
-        if (debug)
-            m_debug.push_back(current + 1);
-
         m_list.pop_front();
         m_way.push_back(new Vertex(current, false));
 
@@ -46,9 +43,17 @@ void BFSAlgorithm::algorithm(Node *start, Node *finish, GraphicsView *view)
             goto Exit;
         }
 
+        if (debug)
+            m_debug.push_back(current + 1);
+
         /* Mark opened nodes until not found connected one */
-        if (!found && node != start)
-            node->setBrush(QBrush(Qt::yellow, Qt::SolidPattern));
+        if (!found)
+        {
+            if (node != start)
+                node->setBrush(QBrush(Qt::yellow, Qt::SolidPattern));
+
+            m_raport.push_back(current + 1);
+        }
 
         for(int i=0; i<m_graph[current].size(); i++)
         {
@@ -69,6 +74,9 @@ void BFSAlgorithm::algorithm(Node *start, Node *finish, GraphicsView *view)
                     markWay(view, finish, reset);
                     found = true;
                     reset = false;
+
+                    MainWindow::instance().createRaport();
+                    MainWindow::instance().getRaport()->setRaport(m_raport);
                 }
 
                 if (!visited[i]) /* if not visited yet */

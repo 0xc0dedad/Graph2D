@@ -6,7 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
       m_settings_bar(nullptr),
       m_view(nullptr),
       m_settings(nullptr),
-      m_algorithm(nullptr)
+      m_algorithm(nullptr),
+      m_raport(nullptr)
 {
     layout();
     setBackgroundColor();
@@ -18,6 +19,17 @@ MainWindow::~MainWindow()
 
     if (m_algorithm)
         delete m_algorithm;
+
+    if (m_raport)
+        delete m_raport;
+}
+
+void MainWindow::showRaport()
+{
+    createRaport();
+
+    if (!m_raport->isVisible())
+        m_raport->show();
 }
 
 MainWindow &MainWindow::instance(QWidget *parent)
@@ -35,6 +47,17 @@ QToolBar *MainWindow::getSettingsBar() const
 GraphicsView *MainWindow::getView() const
 {
     return m_view;
+}
+
+Raport *MainWindow::getRaport() const
+{
+    return m_raport;
+}
+
+void MainWindow::createRaport()
+{
+    if (!m_raport)
+        m_raport = new Raport;
 }
 
 void MainWindow::layout()
@@ -156,4 +179,7 @@ void MainWindow::handleControlEvent()
 
     if (action->text() == "restore")
         m_view->deleteAll();
+
+    if (action->text() == "result")
+        showRaport();
 }

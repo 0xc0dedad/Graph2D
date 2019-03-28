@@ -7,9 +7,11 @@
 #include "graphicsview.h"
 #include "settingswindow.h"
 #include "abstractalgorithm.h"
+#include "raport.h"
 
 class GraphicsView;
 class AbstractAlgorithm;
+class Raport;
 
 class MainWindow : public AbstractWindow
 {
@@ -23,6 +25,9 @@ public:
     static MainWindow &instance(QWidget *parent = 0);
     QToolBar *getSettingsBar() const;
     GraphicsView *getView() const;
+    Raport *getRaport() const;
+    void createRaport();
+    void showRaport();
     ~MainWindow();
 
 private:
@@ -43,6 +48,7 @@ private:
         GraphicsView *m_view;
         SettingsWindow *m_settings;
         AbstractAlgorithm *m_algorithm;
+        Raport *m_raport;
 };
 
 #endif // MAINWINDOW_H

@@ -58,6 +58,7 @@ protected:
     QList<int> m_list;
     QVector<int> m_debug;
     QVector<Vertex*> m_way;
+    QVector<int> m_raport;
 };
 
 extern code2color_t code2color_arr[];
