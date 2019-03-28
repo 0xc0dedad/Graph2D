@@ -46,7 +46,8 @@ private:
     void markEdge(QVector<int> marked, Node *finish, GraphicsView *view, bool reset);
 
 protected:
-    virtual void algorithm(Node *start, Node *finish, GraphicsView *view) = 0;
+    virtual void algorithm(Node *start, Node *finish, GraphicsView *view,
+        bool order) = 0;
     void markWay(GraphicsView *view, Node *finish, bool reset);
     void clearWay();
 

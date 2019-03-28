@@ -1,4 +1,5 @@
 #include "abstractalgorithm.h"
+#include "settingswindow.h"
 
 code2color_t code2color_arr[] = {
   { .code = 0, .color = Qt::green},
@@ -202,8 +203,11 @@ void AbstractAlgorithm::clearWay()
 
 void AbstractAlgorithm::run()
 {
+    SettingsWindow *s;
+    Tab *tab;
     Node *start, *finish;
     GraphicsView *view = MainWindow::instance().getView();
+    bool order = true;
 
     if (!view)
         LOG_EXIT("Invalid pointer", );
@@ -215,12 +219,24 @@ void AbstractAlgorithm::run()
          !(finish = view->getFinishNode()) || (start == finish))
         LOG_EXIT("Invalid pointer", );
 
+    if ((s = MainWindow::instance().getSettingsWindow()) &&
+         (tab = s->getSettingsTab()))
+    {
+        QRadioButton *btn;
+
+        if ((btn = tab->getLittleBitRB()) && btn->isChecked())
+            order = true;
+
+        if ((btn = tab->getBiggestBitRB()) && btn->isChecked())
+            order = false;
+    }
+
     m_graph.clear();
     m_list.clear();
     m_debug.clear();
 
     initGraph();
-    algorithm(start, finish, view);
+    algorithm(start, finish, view, order);
 }
 
 Qt::GlobalColor code2color(const int code)

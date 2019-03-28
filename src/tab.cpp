@@ -4,7 +4,10 @@
 Tab::Tab(int type, QWidget *parent)
     : QWidget(parent),
       m_list(nullptr),
-      m_storage(nullptr)
+      m_storage(nullptr),
+      m_settings(nullptr),
+      m_little_bit(nullptr),
+      m_biggest_bit(nullptr)
 {
     switch(type)
     {
@@ -13,6 +16,7 @@ Tab::Tab(int type, QWidget *parent)
         break;
 
         case TabType::SettingsTab:
+        createSettingsTab(this, &m_settings);
         break;
 
         case TabType::StorageTab:
@@ -32,6 +36,16 @@ Tab::~Tab()
 
 }
 
+QRadioButton *Tab::getLittleBitRB() const
+{
+    return m_little_bit;
+}
+
+QRadioButton *Tab::getBiggestBitRB() const
+{
+    return m_biggest_bit;
+}
+
 void Tab::layout()
 {
     QVBoxLayout *layout = new QVBoxLayout;
@@ -41,6 +55,9 @@ void Tab::layout()
 
     if (m_storage)
         layout->addWidget(m_storage);
+
+    if (m_settings)
+        layout->addWidget(m_settings);
 
     this->setLayout(layout);
 }
@@ -96,6 +113,23 @@ QPushButton *Tab::createPushButton(QString title, const char *slot)
     connect(btn, SIGNAL(clicked(bool)), this, slot);
 
     return btn;
+}
+
+QWidget *Tab::createSettingsTab(QWidget *parent, QWidget **settings)
+{
+    QVBoxLayout *layout;
+
+    *settings = new QWidget(parent);
+    layout = new QVBoxLayout;
+    m_little_bit = new QRadioButton("From little bit");
+    m_biggest_bit = new QRadioButton("From biggest bit");
+    m_little_bit->setChecked(true);
+
+    layout->addWidget(m_little_bit);
+    layout->addWidget(m_biggest_bit);
+    (*settings)->setLayout(layout);
+
+    return *settings;
 }
 
 void Tab::writeGraph(QVector<QVector<int> > graph, QTextStream &stream) const

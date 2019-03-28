@@ -11,6 +11,8 @@
 #include "log.h"
 #include "tab.h"
 
+class Tab;
+
 enum TabType
 {
     AlgorithmsTab,
@@ -35,6 +37,7 @@ public:
     QSize sizeHint() const;
     static QString pathToImages();
     AlgorithmID selectedAlgorithm() const;
+    Tab *getSettingsTab() const;
 
 private:
     void layout();
@@ -52,6 +55,7 @@ private:
     QTabWidget *m_tabs;
     QPushButton *m_ok;
     AlgorithmID m_selected_algo;
+    Tab *m_settings_tab;
 };
 
 #endif // SETTINGSWINDOW_H

@@ -11,7 +11,8 @@ BFSAlgorithm::~BFSAlgorithm()
 
 }
 
-void BFSAlgorithm::algorithm(Node *start, Node *finish, GraphicsView *view)
+void BFSAlgorithm::algorithm(Node *start, Node *finish, GraphicsView *view,
+  bool order)
 {
     int id;
     bool debug, reset, found = false;
@@ -55,7 +56,8 @@ void BFSAlgorithm::algorithm(Node *start, Node *finish, GraphicsView *view)
             m_raport.push_back(current + 1);
         }
 
-        for(int i=0; i<m_graph[current].size(); i++)
+        for(int i = order ? 0 : m_graph[current].size() - 1;
+            order ? (i<m_graph[current].size()) : (i>=0) ; order ? i++ : i--)
         {
             if (m_graph[current][i]) /* if connectced with i-node */
             {

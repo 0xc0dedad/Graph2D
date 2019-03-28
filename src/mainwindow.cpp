@@ -54,6 +54,11 @@ Raport *MainWindow::getRaport() const
     return m_raport;
 }
 
+SettingsWindow *MainWindow::getSettingsWindow() const
+{
+    return m_settings;
+}
+
 void MainWindow::createRaport()
 {
     if (!m_raport)

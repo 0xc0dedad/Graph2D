@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QTextStream>
+#include <QRadioButton>
 
 #include "settingswindow.h"
 
@@ -21,11 +22,15 @@ public:
      explicit Tab(int type, QWidget *parent = Q_NULLPTR);
      ~Tab();
 
+    QRadioButton *getLittleBitRB() const;
+    QRadioButton *getBiggestBitRB() const;
+
 private:
     void layout();
     QListWidget *createAlgorithmsTab(QWidget *parent, QListWidget **list);
     QWidget *createStorageTab(QWidget *parent, QWidget **tab);
     QPushButton *createPushButton(QString title, const char *slot);
+    QWidget *createSettingsTab(QWidget *parent, QWidget **settings);
 
 private:
     void writeGraph(QVector<QVector<int> > graph, QTextStream &stream) const;
@@ -40,6 +45,8 @@ private slots:
 private:
     QListWidget *m_list;
     QWidget *m_storage;
+    QWidget *m_settings;
+    QRadioButton *m_little_bit, *m_biggest_bit;
 };
 
 #endif // TAB_H

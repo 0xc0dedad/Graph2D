@@ -4,7 +4,8 @@ SettingsWindow::SettingsWindow(QDialog *parent)
     : QDialog(parent),
       m_tabs(nullptr),
       m_ok(nullptr),
-      m_selected_algo(BFS)
+      m_selected_algo(BFS),
+      m_settings_tab(nullptr)
 {
     QSize size = sizeHint();
 
@@ -32,6 +33,11 @@ AlgorithmID SettingsWindow::selectedAlgorithm() const
     return m_selected_algo;
 }
 
+Tab *SettingsWindow::getSettingsTab() const
+{
+    return m_settings_tab;
+}
+
 void SettingsWindow::layout()
 {
     QVBoxLayout *layout = new QVBoxLayout;
@@ -54,7 +60,7 @@ QTabWidget *SettingsWindow::createTabs(QWidget *parent, QTabWidget **tabs)
     *tabs = new QTabWidget(parent);
 
     (*tabs)->addTab(new Tab(AlgorithmsTab, parent), "Algorithms");
-    (*tabs)->addTab(new Tab(SettingsTab, parent), "Settings");
+    (*tabs)->addTab((m_settings_tab = new Tab(SettingsTab, parent)), "Settings");
     (*tabs)->addTab(new Tab(StorageTab, parent), "Storage");
 
     return *tabs;

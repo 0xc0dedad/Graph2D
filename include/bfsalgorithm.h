@@ -12,7 +12,8 @@ public:
      ~BFSAlgorithm();
 
 protected:
-    virtual void algorithm(Node *start, Node *finish, GraphicsView *view);
+    virtual void algorithm(Node *start, Node *finish, GraphicsView *view,
+	bool order);
 };
 
 #endif // BFSALGORITHM_H

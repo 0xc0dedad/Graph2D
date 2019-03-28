@@ -26,6 +26,7 @@ public:
     QToolBar *getSettingsBar() const;
     GraphicsView *getView() const;
     Raport *getRaport() const;
+    SettingsWindow *getSettingsWindow() const;
     void createRaport();
     void showRaport();
     ~MainWindow();
