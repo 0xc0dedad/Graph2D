@@ -32,6 +32,11 @@ void MainWindow::showRaport()
         m_raport->show();
 }
 
+void MainWindow::showMessage(QString msg)
+{
+    QMessageBox::information(this, "Info", msg, QMessageBox::Ok);
+}
+
 MainWindow &MainWindow::instance(QWidget *parent)
 {
     static MainWindow instance(parent);

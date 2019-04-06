@@ -176,18 +176,20 @@ void AbstractAlgorithm::markEdge(QVector<int> marked, Node *finish,
     code++;
 }
 
-void AbstractAlgorithm::markWay(GraphicsView *view,
+QVector<int> AbstractAlgorithm::markWay(GraphicsView *view,
   Node *finish, bool reset)
 {
     QVector<int> marked;
 
     if (m_way.isEmpty())
-        LOG_EXIT("Array is empty", );
+        LOG_EXIT("Array is empty", QVector<int>());
 
     marked.push_back(m_way[0]->id);
     checkBranch(marked, finish, view);
     markEdge(marked, finish, view, reset);
     clearWay();
+
+    return marked;
 }
 
 void AbstractAlgorithm::clearWay()
@@ -217,7 +219,10 @@ void AbstractAlgorithm::run()
 
     if (!(start = view->getStartNode()) ||
          !(finish = view->getFinishNode()) || (start == finish))
+    {
+        MainWindow::instance().showMessage("Select start and end node!");
         LOG_EXIT("Invalid pointer", );
+    }
 
     if ((s = MainWindow::instance().getSettingsWindow()) &&
          (tab = s->getSettingsTab()))

@@ -48,7 +48,7 @@ private:
 protected:
     virtual void algorithm(Node *start, Node *finish, GraphicsView *view,
         bool order) = 0;
-    void markWay(GraphicsView *view, Node *finish, bool reset);
+    QVector<int> markWay(GraphicsView *view, Node *finish, bool reset);
     void clearWay();
 
 private slots:

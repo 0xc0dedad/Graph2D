@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QStringList>
+#include <QMessageBox>
 
 #include "abstractwindow.h"
 #include "graphicsview.h"
@@ -29,6 +30,7 @@ public:
     SettingsWindow *getSettingsWindow() const;
     void createRaport();
     void showRaport();
+    void showMessage(QString msg);
     ~MainWindow();
 
 private:

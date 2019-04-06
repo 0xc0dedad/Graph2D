@@ -73,12 +73,22 @@ void BFSAlgorithm::algorithm(Node *start, Node *finish, GraphicsView *view,
              * if want mark more than one way from start to finish point later. */
                 if ((node == finish) && !found)
                 {
-                    markWay(view, finish, reset);
+                    QVector<int> marked = markWay(view, finish, reset);
+
+                    if (marked.isEmpty())
+                        LOG_EXIT("Vector is empty", );
+
+                    /* XXX: Workaround */
+                    for(int i=0; i<marked.size(); i++)
+                        marked[i]++;
+
                     found = true;
                     reset = false;
 
                     MainWindow::instance().createRaport();
                     MainWindow::instance().getRaport()->setRaport(m_raport);
+                    MainWindow::instance().getRaport()->appendRaport(marked,
+		       "Way: ");
                 }
 
                 if (!visited[i]) /* if not visited yet */
@@ -89,6 +99,9 @@ void BFSAlgorithm::algorithm(Node *start, Node *finish, GraphicsView *view,
             }
         }
     }
+
+    if (!found)
+        MainWindow::instance().showMessage("Solution not found!");
 
     if (debug)
         qDebug() << m_debug;
