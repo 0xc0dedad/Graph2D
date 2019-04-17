@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "bfsalgorithm.h"
+#include "dfsalgorithm.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : AbstractWindow(parent),
@@ -143,6 +144,10 @@ AbstractAlgorithm *MainWindow::createAlgorithm(QObject *parent)
     {
         case BFS:
         m_algorithm = new BFSAlgorithm(parent);
+        break;
+
+        case DFS:
+        m_algorithm = new DFSAlgorithm(parent);
         break;
 
         default:
