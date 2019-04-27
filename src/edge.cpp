@@ -35,6 +35,11 @@ int Edge::id() const
 void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
  QWidget *widget)
 {
+    GraphicsView *view = MainWindow::instance().getView();
+
+    if (!view)
+        LOG_EXIT("Invalid pointer", );
+
     QGraphicsLineItem::paint(painter, option, widget);
 
     if (m_directable)
@@ -44,6 +49,21 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
         painter->setBrush(QBrush(Qt::black, Qt::SolidPattern));
         painter->drawEllipse(line().x2() - radius / 2,
          line().y2() - radius / 2, radius, radius);
+    }
+
+    if (m_is_weighted)
+    {
+        QFont font("Ubuntu", 12, QFont::Bold);
+        QString weight = QString::number(m_weight);
+        QSize metrix = view->getFontMetrix(font, weight);
+        double x = (line().x1() + line().x2()) / 2;
+        double y = (line().y1() + line().y2()) / 2;
+
+        painter->setFont(font);
+        painter->setPen(QPen(Qt::cyan, 1, Qt::SolidLine));
+        painter->drawText(QRectF(x - metrix.width() / 2,
+                  y - metrix.height() / 2, metrix.width(), metrix.height()),
+                  weight);
     }
 }
 
