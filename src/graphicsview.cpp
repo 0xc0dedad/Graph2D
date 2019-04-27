@@ -212,6 +212,13 @@ void GraphicsView::setEdgeWeight(Edge *edge)
     setMode(Default);
 }
 
+QSize GraphicsView::getFontMetrix(QFont font, QString string) const
+{
+    QFontMetrics metrix(font);
+
+    return QSize(metrix.width(string), metrix.height());
+}
+
 void GraphicsView::updateMarks()
 {
     for(int i=0; i<m_nodes.size(); i++)
