@@ -204,7 +204,7 @@ void GraphicsView::setEdgeWeight(Edge *edge)
     weight = MainWindow::instance().openInputDialog("Set weight...",
                "Weight: ", &ok);
 
-    if (ok && !weight.isEmpty() && !edge->isWeighted())
+    if (ok && !weight.isEmpty())
         edge->weight(weight.toUInt());
     else
         LOG_EXIT("Invalid edge weight", );
