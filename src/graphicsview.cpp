@@ -204,10 +204,13 @@ void GraphicsView::setEdgeWeight(Edge *edge)
     weight = MainWindow::instance().openInputDialog("Set weight...",
                "Weight: ", &ok);
 
-    if (ok && !weight.isEmpty())
+    if (ok && isStringValid(weight, "^[0-9]{1,3}$"))
         edge->weight(weight.toUInt());
     else
+    {
+        MainWindow::instance().showMessage("Invalid weight!");
         LOG_EXIT("Invalid edge weight", );
+    }
 
     setMode(Default);
 }
@@ -217,6 +220,16 @@ QSize GraphicsView::getFontMetrix(QFont font, QString string) const
     QFontMetrics metrix(font);
 
     return QSize(metrix.width(string), metrix.height());
+}
+
+bool GraphicsView::isStringValid(QString string, QString expression) const
+{
+    QRegExp matcher(expression, Qt::CaseInsensitive);
+
+    if (string.isEmpty() || expression.isEmpty())
+        LOG_EXIT("Invalid string", false);
+
+    return matcher.exactMatch(string);
 }
 
 void GraphicsView::updateMarks()

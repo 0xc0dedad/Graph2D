@@ -10,6 +10,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsEllipseItem>
 #include <QFontMetrics>
+#include <QRegExp>
 
 #include "log.h"
 #include "mainwindow.h"
@@ -82,6 +83,7 @@ public:
     void deleteAll();
     void setEdgeWeight(Edge *edge);
     QSize getFontMetrix(QFont font, QString string) const;
+    bool isStringValid(QString string, QString expression) const;
 
 protected:
     void mousePressEvent(QMouseEvent *event);
