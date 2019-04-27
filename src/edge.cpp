@@ -4,7 +4,9 @@ Edge::Edge(QGraphicsLineItem *parent)
     : AbstractItem(nullptr),
       QGraphicsLineItem(parent),
       m_is_selected(true),
-      m_directable(false)
+      m_directable(false),
+      m_is_weighted(false),
+      m_weight(0)
 {
 
 }
@@ -13,7 +15,9 @@ Edge::Edge(qreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem *parent)
     : AbstractItem(nullptr),
       QGraphicsLineItem(x1, y1, x2, y2, parent),
       m_is_selected(true),
-      m_directable(false)
+      m_directable(false),
+      m_is_weighted(false),
+      m_weight(0)
 {
 
 }
@@ -49,6 +53,7 @@ void Edge::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
     menu.addAction("Directable", this, SLOT(signalSender()));
     menu.addAction("Delete edge", this, SLOT(signalSender()));
+    menu.addAction("Weight...", this, SLOT(signalSender()));
     menu.exec(event->screenPos());
 }
 
@@ -108,6 +113,17 @@ void Edge::directable(bool able)
 bool Edge::isDirectable() const
 {
     return m_directable;
+}
+
+bool Edge::isWeighted() const
+{
+    return m_is_weighted;
+}
+
+void Edge::weight(size_t weight)
+{
+    m_weight = weight;
+    m_is_weighted = (bool) weight;
 }
 
 QRectF Edge::getArrow() const

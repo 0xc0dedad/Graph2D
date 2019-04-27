@@ -38,6 +38,12 @@ void MainWindow::showMessage(QString msg)
     QMessageBox::information(this, "Info", msg, QMessageBox::Ok);
 }
 
+QString MainWindow::openInputDialog(QString title, QString msg, bool *ok)
+{
+    return QInputDialog::getText(this, title, msg, QLineEdit::Normal, QString(),
+		ok);
+}
+
 MainWindow &MainWindow::instance(QWidget *parent)
 {
     static MainWindow instance(parent);

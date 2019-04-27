@@ -30,6 +30,7 @@ enum Mode
     MarkAsStart,
     MarkAsFinish,
     Directable,
+    SetWeight,
     None = -1
 };
 
@@ -78,6 +79,7 @@ public:
     void restoreEdges(QVector<QVector<int> > graph);
     Node *findNodeByName(int name) const;
     void deleteAll();
+    void setEdgeWeight(Edge *edge);
 
 protected:
     void mousePressEvent(QMouseEvent *event);

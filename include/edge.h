@@ -33,6 +33,8 @@ public:
     QPointF getSecondVertexPos() const;
     void directable(bool able);
     bool isDirectable() const;
+    bool isWeighted() const;
+    void weight(size_t weight);
     QRectF getArrow() const;
 
 private slots:
@@ -43,6 +45,8 @@ private:
     bool m_is_selected;
     QPair<Node*, Node*> m_vertices;
     bool m_directable;
+    bool m_is_weighted;
+    size_t m_weight;
 };
 
 #endif // EDGE_H

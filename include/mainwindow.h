@@ -3,6 +3,7 @@
 
 #include <QStringList>
 #include <QMessageBox>
+#include <QInputDialog>
 
 #include "abstractwindow.h"
 #include "graphicsview.h"
@@ -31,6 +32,7 @@ public:
     void createRaport();
     void showRaport();
     void showMessage(QString msg);
+    QString openInputDialog(QString title, QString msg, bool *ok);
     ~MainWindow();
 
 private:

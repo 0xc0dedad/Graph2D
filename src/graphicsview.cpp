@@ -8,6 +8,7 @@ str2mode_t str2mode_arr[] = {
   { .str = "Mark as start", .mode = MarkAsStart },
   { .str = "Mark as finish", .mode = MarkAsFinish },
   { .str = "Directable", .mode = Directable },
+  { .str = "Weight...", .mode = SetWeight },
   { NULL, None }
 };
 
@@ -192,6 +193,25 @@ void GraphicsView::deleteAll()
     setMode(Default);
 }
 
+void GraphicsView::setEdgeWeight(Edge *edge)
+{
+    bool ok;
+    QString weight;
+
+    if (!edge)
+        LOG_EXIT("Invalid pointer", );
+
+    weight = MainWindow::instance().openInputDialog("Set weight...",
+               "Weight: ", &ok);
+
+    if (ok && !weight.isEmpty() && !edge->isWeighted())
+        edge->weight(weight.toUInt());
+    else
+        LOG_EXIT("Invalid edge weight", );
+
+    setMode(Default);
+}
+
 void GraphicsView::updateMarks()
 {
     for(int i=0; i<m_nodes.size(); i++)
@@ -255,6 +275,10 @@ void GraphicsView::modeHandler(QAction *action, AbstractItem *sndr)
 
         case Directable:
         directableEdge(m_selected_edge);
+        break;
+
+        case SetWeight:
+        setEdgeWeight(m_selected_edge);
         break;
 
         case Default:
