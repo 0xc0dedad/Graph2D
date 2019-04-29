@@ -177,17 +177,21 @@ void Tab::writeUIConf(QString filename) const
     file.close();
 }
 
-void Tab::readUIConf(QTextStream &stream) const
+void Tab::readUIConf(QString filename, QTextStream &stream) const
 {
     QPointF point;
     GraphicsView *view = MainWindow::instance().getView();
+    QVector<QString> tooltips = readNodeToolTips(filename);
     size_t radius = 20;
+    size_t i = 0;
 
-    if (!view)
-        LOG_EXIT("Invalid pointer", );
+
+    if (!view || tooltips.isEmpty())
+        LOG_EXIT("Invalid paramter", );
 
     while (!stream.atEnd())
     {
+        Node *node;
         QString subline;
         QString line = stream.readLine();
 
@@ -196,7 +200,9 @@ void Tab::readUIConf(QTextStream &stream) const
         subline = line.split(" ")[1];
         point.setY(subline.toDouble());
 
-        view->addNode(radius, QBrush(Qt::white, Qt::SolidPattern), point);
+        node = view->addNode(radius, QBrush(Qt::white, Qt::SolidPattern),
+         point);
+        node->setToolTip(tooltips[i++]);
     }
 }
 
@@ -231,6 +237,64 @@ void Tab::readGraph(QString filename) const
     view->restoreEdges(graph);
 }
 
+void Tab::writeNodeToolTips(QString filename) const
+{
+    QFile file;
+    QTextStream stream;
+    QVector<Node*> nodes;
+    GraphicsView *view = MainWindow::instance().getView();
+
+    if (!view)
+        LOG_EXIT("Invalid pointer", );
+
+    file.setFileName(filename + "_tt.conf");
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        LOG_EXIT("Can't open file!", );
+
+    stream.setDevice(&file);
+    nodes = view->getNodes();
+
+    for(int i=0; i<nodes.size(); i++)
+    {
+        QString tooltip = !nodes[i]->toolTip().isEmpty() ?
+          nodes[i]->toolTip() : "";
+
+        stream << nodes[i]->text() << " "
+          << tooltip << "\n";
+    }
+
+    file.close();
+}
+
+QVector<QString> Tab::readNodeToolTips(QString filename) const
+{
+    QFile file;
+    QTextStream stream;
+    QVector<QString> tooltips;
+
+    if (filename.isEmpty())
+        LOG_EXIT("Filename is empty", QVector<QString>());
+
+    file.setFileName(filename.split(".")[0] + "_tt.conf");
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        LOG_EXIT("Can't open file!: " << filename, QVector<QString>());
+
+    stream.setDevice(&file);
+
+    while (!stream.atEnd())
+    {
+        QString line = stream.readLine();
+
+        tooltips.push_back(line.split(" ")[1]);
+    }
+
+    file.close();
+
+    return tooltips;
+}
+
 void Tab::download()
 {
     QFile file;
@@ -260,6 +324,7 @@ void Tab::download()
     writeGraph(graph, stream);
     file.close();
     writeUIConf(filename);
+    writeNodeToolTips(filename);
 }
 
 void Tab::upload()
@@ -279,7 +344,7 @@ void Tab::upload()
         LOG_EXIT("Can't open file!: " << filename, );
 
     stream.setDevice(&file);
-    readUIConf(stream);
+    readUIConf(filename, stream);
     file.close();
     readGraph(filename);
 }

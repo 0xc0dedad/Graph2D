@@ -33,6 +33,7 @@ enum Mode
     MarkAsFinish,
     Directable,
     SetWeight,
+    SetToolTip,
     None = -1
 };
 
@@ -62,7 +63,7 @@ public:
     void addItem(QGraphicsItem *item);
     void setBrush(QBrush brush);
     QGraphicsScene *getScene() const;
-    void addNode(const size_t radius, const QBrush brush, const QPointF pos);
+    Node* addNode(const size_t radius, const QBrush brush, const QPointF pos);
     Edge *addEdge(qreal x1, qreal y1, qreal x2, qreal y2, Node *node,
      Node *second);
     Mode getMode() const;
@@ -84,6 +85,7 @@ public:
     void setEdgeWeight(Edge *edge);
     QSize getFontMetrix(QFont font, QString string) const;
     bool isStringValid(QString string, QString expression) const;
+    void setNodeToolTip(Node *node);
 
 protected:
     void mousePressEvent(QMouseEvent *event);

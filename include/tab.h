@@ -35,8 +35,10 @@ private:
 private:
     void writeGraph(QVector<QVector<int> > graph, QTextStream &stream) const;
     void writeUIConf(QString filename) const;
-    void readUIConf(QTextStream &stream) const;
+    void readUIConf(QString filename, QTextStream &stream) const;
     void readGraph(QString filename) const;
+    void writeNodeToolTips(QString filename) const;
+    QVector<QString> readNodeToolTips(QString filename) const;
 
 private slots:
     void download();

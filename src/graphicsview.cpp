@@ -9,6 +9,7 @@ str2mode_t str2mode_arr[] = {
   { .str = "Mark as finish", .mode = MarkAsFinish },
   { .str = "Directable", .mode = Directable },
   { .str = "Weight...", .mode = SetWeight },
+  { .str = "ToolTip...", .mode = SetToolTip },
   { NULL, None }
 };
 
@@ -232,6 +233,28 @@ bool GraphicsView::isStringValid(QString string, QString expression) const
     return matcher.exactMatch(string);
 }
 
+void GraphicsView::setNodeToolTip(Node *node)
+{
+    bool ok;
+    QString tooltip;
+
+    if (!node)
+        LOG_EXIT("Invalid pointer", );
+
+    tooltip = MainWindow::instance().openInputDialog("Set ToolTip...",
+               "ToolTip: ", &ok);
+
+    if (ok && !tooltip.isEmpty())
+        node->setToolTip(tooltip);
+    else
+    {
+        MainWindow::instance().showMessage("Invalid tooltip!");
+        LOG_EXIT("Invalid tooltip", );
+    }
+
+    setMode(Default);
+}
+
 void GraphicsView::updateMarks()
 {
     for(int i=0; i<m_nodes.size(); i++)
@@ -301,6 +324,10 @@ void GraphicsView::modeHandler(QAction *action, AbstractItem *sndr)
         setEdgeWeight(m_selected_edge);
         break;
 
+        case SetToolTip:
+        setNodeToolTip(m_selected_node);
+        break;
+
         case Default:
         case Connecting:
         case Moving:
@@ -338,7 +365,7 @@ QGraphicsScene *GraphicsView::getScene() const
     return m_scene;
 }
 
-void GraphicsView::addNode(const size_t radius, const QBrush brush,
+Node *GraphicsView::addNode(const size_t radius, const QBrush brush,
   const QPointF pos)
 {
     QRectF rect;
@@ -347,7 +374,7 @@ void GraphicsView::addNode(const size_t radius, const QBrush brush,
     rect.setRect(pos.x() - radius / 2, pos.y() - radius / 2, radius, radius);
 
     if (isNodeIntersected(rect))
-        LOG_EXIT("Node intersected!", );
+        LOG_EXIT("Node intersected!", nullptr);
 
     item = new Node;
     item->setRect(rect);
@@ -355,6 +382,8 @@ void GraphicsView::addNode(const size_t radius, const QBrush brush,
 
     m_scene->addItem(item);
     m_nodes.push_back(item);
+
+    return item;
 }
 
 Edge *GraphicsView::addEdge(qreal x1, qreal y1, qreal x2, qreal y2,
