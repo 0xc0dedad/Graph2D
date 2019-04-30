@@ -19,6 +19,7 @@ public:
     void setRaport(QVector<int>);
     void setRaport(QString);
     void appendRaport(QVector<int>, QString msg);
+    void appendRaport(QString msg);
 
 private:
     void layout();

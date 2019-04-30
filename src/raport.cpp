@@ -70,3 +70,8 @@ void Raport::appendRaport(QVector<int> raport, QString msg)
         counter++;
     }
 }
+
+void Raport::appendRaport(QString msg)
+{
+    m_lbl->setText(m_lbl->text() + "<br/>" + msg);
+}

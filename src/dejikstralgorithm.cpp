@@ -86,14 +86,15 @@ void DejikstraAlgorithm::algorithm(Node *start, Node *finish, GraphicsView *view
 
     if (found)
     {
-        QVector<int> marked = markWay(view, finish, true);
+        QVector<QVector<int> > ways = markWay(view, finish, true);
 
-        if (marked.isEmpty())
+        if (ways.isEmpty())
             LOG_EXIT("Vector is empty", );
 
         /* XXX: Create raport here! */
         updateToolTips(view);
         createRaport(start, view);
+        printWays(view, ways, finish);
     }
     else
         MainWindow::instance().showMessage("Solution not found!");
@@ -147,14 +148,13 @@ bool DejikstraAlgorithm::checkBranch(QVector<int> &marked, Node *finish,
                 LOG_EXIT("Invalid pointer", false);
 
             if ((edge = n1->findConnectedEdge(n2)) && !wasVisitedFromNode(index,
-		  m_way[i]))
+                    m_way[i]))
             {
                 marked.push_back(m_way[i]->id);
                 m_way[i]->visited_from.push_back(index);
                 weights.push_back(edge->getWeight());
                 checksum -= weights.at(weights.size() - 1);
-                checkBranch(marked, finish, view, false);
-                return true;
+                return checkBranch(marked, finish, view, false);
             }
         }
     }
@@ -165,9 +165,8 @@ bool DejikstraAlgorithm::checkBranch(QVector<int> &marked, Node *finish,
     checksum += weights.at(weights.size() - 1);
     weights.pop_back();
     marked.pop_back();
-    checkBranch(marked, finish, view, false);
 
-    return true;
+    return checkBranch(marked, finish, view, false);
 }
 
 bool DejikstraAlgorithm::wasVisitedFromNode(int from, Vertex *node) const
@@ -181,20 +180,22 @@ bool DejikstraAlgorithm::wasVisitedFromNode(int from, Vertex *node) const
     return false;
 }
 
-QVector<int> DejikstraAlgorithm::markWay(GraphicsView *view, Node *finish,
-  bool reset)
+QVector<QVector<int> > DejikstraAlgorithm::markWay(GraphicsView *view,
+  Node *finish, bool reset)
 {
     bool reset_color = true;
     QVector<int> marked;
+    QVector<QVector<int> > result;
 
     if (m_way.isEmpty())
-        LOG_EXIT("Array is empty", QVector<int>());
+        LOG_EXIT("Array is empty", QVector<QVector<int> >());
 
     marked.push_back(m_way[0]->id);
 
     while(checkBranch(marked, finish, view, reset))
     {
         markEdge(marked, finish, view, reset_color);
+        result.push_back(marked);
         marked.clear();
         marked.push_back(m_way[0]->id);
         reset_color = false;
@@ -202,7 +203,7 @@ QVector<int> DejikstraAlgorithm::markWay(GraphicsView *view, Node *finish,
 
     clearWay();
 
-    return marked;
+    return result;
 }
 
 void DejikstraAlgorithm::updateToolTips(GraphicsView *view) const
@@ -254,4 +255,32 @@ void DejikstraAlgorithm::createRaport(Node *first, GraphicsView *view) const
 
     MainWindow::instance().createRaport();
     MainWindow::instance().getRaport()->setRaport(result);
+}
+
+void DejikstraAlgorithm::printWays(GraphicsView *view,
+  QVector<QVector<int> > ways, Node *finish) const
+{
+    QString result;
+
+    if (!view || ways.isEmpty())
+        LOG_EXIT("Invalid parameter!", );
+
+    for(int i=0; i<ways.size(); i++)
+    {
+        result += "Way: ";
+
+        for(int j=0; j<ways[i].size(); j++)
+        {
+            Node *node;
+
+            if (!(node = view->findNodeByIndex(ways[i][j])))
+                LOG_EXIT("Invalid pointer!", );
+
+            result += node->toolTip().split(",")[0] + " - ";
+        }
+
+        result += finish->toolTip().split(",")[0] + "<br/>";
+    }
+
+    MainWindow::instance().getRaport()->appendRaport(result);
 }
