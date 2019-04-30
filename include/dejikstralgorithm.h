@@ -20,6 +20,8 @@ protected:
 private:
         bool wasVisitedFromNode(int from, Vertex *node) const;
         QVector<int> markWay(GraphicsView *view, Node *finish, bool reset);
+        void updateToolTips(GraphicsView *view) const;
+        void createRaport(Node *first, GraphicsView *view) const;
 };
 
 #endif // DEJIKSTRALGORITHM_H

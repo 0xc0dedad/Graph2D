@@ -92,6 +92,8 @@ void DejikstraAlgorithm::algorithm(Node *start, Node *finish, GraphicsView *view
             LOG_EXIT("Vector is empty", );
 
         /* XXX: Create raport here! */
+        updateToolTips(view);
+        createRaport(start, view);
     }
     else
         MainWindow::instance().showMessage("Solution not found!");
@@ -201,4 +203,55 @@ QVector<int> DejikstraAlgorithm::markWay(GraphicsView *view, Node *finish,
     clearWay();
 
     return marked;
+}
+
+void DejikstraAlgorithm::updateToolTips(GraphicsView *view) const
+{
+    QVector<Node*> nodes;
+
+    if (!view)
+        LOG_EXIT("Invalid pointer!", );
+
+    nodes = view->getNodes();
+
+    for(int i=0; i<nodes.size(); i++)
+    {
+        int path = m_shortest[nodes[i]->text().toInt() - 1];
+
+        if (nodes[i]->toolTip().isEmpty())
+            nodes[i]->setToolTip(QString::number(path));
+        else
+        {
+            nodes[i]->setToolTip(nodes[i]->toolTip().split(",")[0] + ", " +
+             QString::number(path));
+        }
+    }
+}
+
+void DejikstraAlgorithm::createRaport(Node *first, GraphicsView *view) const
+{
+    QString result, source, destination;
+    QVector<Node*> nodes;
+
+    if (!view || !first)
+        LOG_EXIT("Invalid pointer!", );
+
+    nodes = view->getNodes();
+    source = first->toolTip().isEmpty() ? first->text() :
+       first->toolTip().split(",")[0];
+
+    for(int i=0; i<nodes.size(); i++)
+    {
+        if (nodes[i] == first)
+            continue;
+
+        destination = nodes[i]->toolTip().isEmpty() ? nodes[i]->text() :
+           nodes[i]->toolTip().split(",")[0];
+
+        result += source + " - " + destination + " : " +
+         QString::number(m_shortest[nodes[i]->text().toInt() - 1]) + "<br/>";
+    }
+
+    MainWindow::instance().createRaport();
+    MainWindow::instance().getRaport()->setRaport(result);
 }

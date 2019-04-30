@@ -6,7 +6,8 @@ Raport::Raport(QWidget *parent)
       m_lbl(nullptr)
 {
     layout();
-    this->setFixedSize(Width, Height);
+    this->setMinimumWidth(Width);
+    this->setMinimumHeight(Height);
 }
 
 Raport::~Raport()
@@ -44,6 +45,11 @@ void Raport::setRaport(QVector<int> raport)
         m_lbl->setText(m_lbl->text() + QString::number(raport[i]) + " - ");
         counter++;
     }
+}
+
+void Raport::setRaport(QString msg)
+{
+    m_lbl->setText(msg);
 }
 
 void Raport::appendRaport(QVector<int> raport, QString msg)

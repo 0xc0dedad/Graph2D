@@ -17,6 +17,7 @@ public:
     explicit Raport(QWidget *parent = Q_NULLPTR);
     ~Raport();
     void setRaport(QVector<int>);
+    void setRaport(QString);
     void appendRaport(QVector<int>, QString msg);
 
 private:
