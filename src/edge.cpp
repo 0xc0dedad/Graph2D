@@ -6,7 +6,7 @@ Edge::Edge(QGraphicsLineItem *parent)
       m_is_selected(true),
       m_directable(false),
       m_is_weighted(false),
-      m_weight(0)
+      m_weight(1)
 {
 
 }
@@ -17,7 +17,7 @@ Edge::Edge(qreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem *parent)
       m_is_selected(true),
       m_directable(false),
       m_is_weighted(false),
-      m_weight(0)
+      m_weight(1)
 {
 
 }
@@ -140,10 +140,15 @@ bool Edge::isWeighted() const
     return m_is_weighted;
 }
 
-void Edge::weight(size_t weight)
+void Edge::setWeight(size_t weight)
 {
     m_weight = weight;
     m_is_weighted = (bool) weight;
+}
+
+size_t Edge::getWeight() const
+{
+    return m_weight;
 }
 
 QRectF Edge::getArrow() const

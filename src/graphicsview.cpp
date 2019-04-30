@@ -134,6 +134,7 @@ void GraphicsView::restoreEdges(QVector<QVector<int> > graph)
 {
     Node *row, *col;
     Edge *edge;
+    int current;
 
     if (graph.isEmpty())
         LOG_EXIT("Vector is empty", );
@@ -145,7 +146,7 @@ void GraphicsView::restoreEdges(QVector<QVector<int> > graph)
 
         for(int j=0; j<graph[i].size(); j++)
         {
-            if (graph[i][j])
+            if ((current = graph[i][j]))
             {
                 if (!(col = findNodeByIndex(j)))
                     LOG_EXIT("Invalid pointer", );
@@ -156,6 +157,9 @@ void GraphicsView::restoreEdges(QVector<QVector<int> > graph)
                 edge = addEdge(row->rect().center().x(), row->rect().center().y(),
                        col->rect().center().x(), col->rect().center().y(),
                        row, col);
+
+                if (current > 1)
+                    edge->setWeight(current);
 
                 row->addNeighbor(col);
 
@@ -206,7 +210,7 @@ void GraphicsView::setEdgeWeight(Edge *edge)
                "Weight: ", &ok);
 
     if (ok && isStringValid(weight, "^[0-9]{1,3}$"))
-        edge->weight(weight.toUInt());
+        edge->setWeight(weight.toUInt());
     else
     {
         MainWindow::instance().showMessage("Invalid weight!");

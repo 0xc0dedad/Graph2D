@@ -34,7 +34,8 @@ public:
     void directable(bool able);
     bool isDirectable() const;
     bool isWeighted() const;
-    void weight(size_t weight);
+    void setWeight(size_t weight);
+    size_t getWeight() const;
     QRectF getArrow() const;
 
 private slots:

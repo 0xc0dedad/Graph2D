@@ -5,7 +5,10 @@
 #include <QVector>
 #include <QList>
 
+#include <climits>
 #include "mainwindow.h"
+
+#define INF INT32_MAX
 
 class GraphicsView;
 class Node;
@@ -21,6 +24,7 @@ struct Vertex
 {
     int id;
     bool visited;
+    QVector<int> visited_from;
 
     Vertex(int _id, bool _visited) :
         id (_id),
@@ -41,14 +45,14 @@ public:
 private:
     bool resizeGraph(GraphicsView *view);
     void debugGraph();
-    int getIndex(int val) const;
-    void checkBranch(QVector<int> &marked, Node *finish, GraphicsView *view);
-    void markEdge(QVector<int> marked, Node *finish, GraphicsView *view, bool reset);
 
 protected:
     virtual void algorithm(Node *start, Node *finish, GraphicsView *view,
         bool order) = 0;
+    void checkBranch(QVector<int> &marked, Node *finish, GraphicsView *view);
     QVector<int> markWay(GraphicsView *view, Node *finish, bool reset);
+    void markEdge(QVector<int> marked, Node *finish, GraphicsView *view, bool reset);
+    int getIndex(int val) const;
     void clearWay();
 
 private slots:
@@ -60,6 +64,7 @@ protected:
     QVector<int> m_debug;
     QVector<Vertex*> m_way;
     QVector<int> m_raport;
+    int *m_shortest;
 };
 
 extern code2color_t code2color_arr[];

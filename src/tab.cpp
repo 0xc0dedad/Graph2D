@@ -69,7 +69,7 @@ QListWidget *Tab::createAlgorithmsTab(QWidget *parent, QListWidget **list)
     QString path = SettingsWindow::pathToImages();
     SettingsWindow *sw = qobject_cast<SettingsWindow*> (this->parent());
 
-    lst << "BFS" << "DFS" << "Dijkstra";
+    lst << "BFS" << "DFS" << "Dejikstra";
 
     *list = new QListWidget(parent);
     (*list)->setIconSize(QSize(10, 10));

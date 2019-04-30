@@ -24,6 +24,7 @@ enum AlgorithmID
 {
     BFS,
     DFS,
+    Dejikstra,
     Unknown = -1
 };
 

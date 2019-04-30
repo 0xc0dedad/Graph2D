@@ -12,7 +12,8 @@ AbstractAlgorithm::AbstractAlgorithm(QObject *parent)
     : QObject(parent),
       m_graph(0),
       m_debug(0),
-      m_way(0)
+      m_way(0),
+      m_shortest(nullptr)
 {
     MainWindow *sender = qobject_cast<MainWindow*> (parent);
 
@@ -78,7 +79,8 @@ void AbstractAlgorithm::initGraph()
                 LOG_EXIT("Invalid node", );
 
             --connected;
-            m_graph[name][connected] = 1;
+            m_graph[name][connected] = (*edges)[j]->isWeighted() ?
+               (*edges)[j]->getWeight() : 1;
         }
     }
 

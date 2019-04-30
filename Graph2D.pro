@@ -38,7 +38,8 @@ SOURCES += \
     src/abstractalgorithm.cpp \
     src/bfsalgorithm.cpp \
     src/raport.cpp \
-    src/dfsalgorithm.cpp
+    src/dfsalgorithm.cpp \
+    src/dejikstralgorithm.cpp
 
 HEADERS += \
         include/mainwindow.h \
@@ -53,4 +54,5 @@ HEADERS += \
     include/abstractalgorithm.h \
     include/bfsalgorithm.h \
     include/raport.h \
-    include/dfsalgorithm.h
+    include/dfsalgorithm.h \
+    include/dejikstralgorithm.h
