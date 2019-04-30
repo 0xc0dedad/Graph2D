@@ -172,7 +172,8 @@ void AbstractAlgorithm::markEdge(QVector<int> marked, Node *finish,
         if (!(edge = n1->findConnectedEdge(n2)))
             LOG_EXIT("Invalid pointer", );
 
-        edge->setPen(QPen(code2color(code), 1.5, Qt::SolidLine));
+        if (edge->pen().color() == Qt::white)
+            edge->setPen(QPen(code2color(code), 1.5, Qt::SolidLine));
     }
 
     code++;
